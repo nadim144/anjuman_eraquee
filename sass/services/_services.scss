@@ -1,0 +1,150 @@
+.service-area{
+	background: url(images/services/1.png) no-repeat;
+	background-position: bottom center;
+	.service-left{
+		.service-list{
+			text-align: right;
+			display: block;
+			margin: 0 0 40px;
+			&:last-child{
+				margin:0;
+			}
+			h4{
+				color: #111111;
+				font-size: 20px;
+				margin: 0 0 15px;
+				text-transform: capitalize;
+				span{
+					color: #fff;
+					font-size: 20px;
+					display: inline-block;
+					margin-left: 10px;
+					width: 46px;
+					height: 46px;
+					position: relative;
+					border-radius: 100%;
+					text-align: center;
+					line-height: 46px;
+					cursor: pointer;
+					&:before{
+						content:'';
+						position: absolute;
+						left: 0;
+						right: 0;
+						top: 0;
+						bottom: 0;
+						background: $primary-color;
+						border-radius: 100%;
+						transition: $transition;
+					}
+					&:after{
+						content:'';
+						position: absolute;
+						left: 50%;
+						right: 50%;
+						top: 50%;
+						bottom: 50%;
+						background: $hover-color;
+						border-radius: 100%;
+						transition: $transition;
+					}
+					&:hover{
+						&:after{
+							left: 0;
+							right: 0;
+							top: 0;
+							bottom: 0;
+						}
+						&:before{
+							left: 50%;
+							right: 50%;
+							top: 50%;
+							bottom: 50%;
+						}
+					}
+					i{
+						position: relative;
+						z-index: 999;
+					}
+				}
+			}
+			p{
+				margin: 0;
+				padding-left: 32px;
+			}
+		}
+	}
+	.service-right{
+		.service-list{
+			text-align: left;
+			display: block;
+			margin: 0 0 40px;
+			&:last-child{
+				margin:0;
+			}
+			h4{
+				color: #111111;
+				font-size: 20px;
+				margin: 0 0 15px;
+				text-transform: capitalize;
+				span{
+					color: #fff;
+					font-size: 20px;
+					display: inline-block;
+					margin-right: 10px;
+					width: 46px;
+					height: 46px;
+					position: relative;
+					border-radius: 100%;
+					text-align: center;
+					line-height: 46px;
+					cursor: pointer;
+					&:before{
+						content:'';
+						position: absolute;
+						left: 0;
+						right: 0;
+						top: 0;
+						bottom: 0;
+						background: $primary-color;
+						border-radius: 100%;
+						transition: $transition;
+					}
+					&:after{
+						content:'';
+						position: absolute;
+						left: 50%;
+						right: 50%;
+						top: 50%;
+						bottom: 50%;
+						background: $hover-color;
+						border-radius: 100%;
+						transition: $transition;
+					}
+					&:hover{
+						&:after{
+							left: 0;
+							right: 0;
+							top: 0;
+							bottom: 0;
+						}
+						&:before{
+							left: 50%;
+							right: 50%;
+							top: 50%;
+							bottom: 50%;
+						}
+					}
+					i{
+						position: relative;
+						z-index: 999;
+					}
+				}
+			}
+			p{
+				margin: 0;
+				padding-left: 32px;
+			}
+		}
+	}
+}

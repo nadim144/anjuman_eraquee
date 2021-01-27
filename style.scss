@@ -1,0 +1,179 @@
+@import url('https://fonts.googleapis.com/css?family=Droid+Sans:400,700|Lato:300,400,400i,700,900');
+/*-------------------------------------
+    Template Name: Mosque - Islamic Center Bootstrap HTML Template
+    Description: This is html5 template
+    Author: Webstrot
+    Version: 1.0
+---------------------------------------
+    
+    CSS INDEX
+    ===================
+	
+  1. Theme Default CSS (body, link color, section etc)
+  2. Header area start here
+  3. Slider area start here
+  4. About area start here
+  5. Team area start here
+  6. Banner area start here
+  7. Blog area start here
+  8. Price list area start here
+  9. Contact area start here
+  10. Footer area start here
+  11. Breadcumb area start here
+  12. Faq area start here
+  13. Videos area start here
+  14. Subscribe area start here
+  15. Causes area start here
+  16. Event area start here
+  17. Services area start here
+  18. Counter area start here
+  19. Gallery area start here
+  20. Prayer area start here
+  21. Testimonial area start here
+
+---------------------------------------*/
+
+/*....................................
+1.Theme default CSS
+....................................*/
+$body-font: 'Lato', sans-serif;
+$transition: all 0.3s;
+$title-font: 'Droid Sans', sans-serif;
+$primary-color:#009146;
+$hover-color:#e5ae49;
+html,
+body {
+  font-size: 16px;
+  color: #797979;
+  font-family: $body-font;
+  vertical-align: baseline;
+  line-height: 26px;
+  font-weight: 400;
+}
+/* ....................................
+1.1 Reset CSS 
+.......................................*/
+@import 'sass/defaults/_defaults.scss';
+
+
+/*....................................
+2. Header area start here
+....................................*/
+@import 'sass/header/_con.scss';
+
+
+/*....................................
+3. Slider area start here
+....................................*/
+@import 'sass/slider/_slider.scss';
+
+
+/*....................................
+4. About area start here
+....................................*/
+@import 'sass/about/_about.scss';
+
+
+/*....................................
+5. Team area start here
+....................................*/
+@import 'sass/team/_team.scss';
+
+
+/*....................................
+6. Banner area start here
+....................................*/
+@import 'sass/banner/_banner.scss';
+
+
+/*....................................
+7. Blog area start here
+....................................*/
+@import 'sass/blog/_con.scss';
+
+
+/*....................................
+8. Price list area start here
+....................................*/
+@import 'sass/price-list/_pricelist.scss';
+
+
+
+/*....................................
+9. Contact area start here
+....................................*/
+@import 'sass/contact/_con.scss';
+
+
+/*....................................
+10. Footer area start here
+....................................*/
+@import 'sass/footer/_con.scss';
+
+
+/*....................................
+11. Breadcumb area start here
+....................................*/
+@import 'sass/breadcumb/_breadcumb.scss';
+
+
+/*....................................
+12. Faq area start here
+....................................*/
+@import 'sass/faq/_faq.scss';
+
+
+/*....................................
+13. Videos area start here
+....................................*/
+@import 'sass/videos/_videos.scss';
+
+
+/*....................................
+14. Subscribe area start here
+....................................*/
+@import 'sass/subscribe/_subscribe.scss';
+
+
+/*....................................
+15. Causes area start here
+....................................*/
+@import 'sass/causes/_causes.scss';
+
+
+/*....................................
+16. Event area start here
+....................................*/
+@import 'sass/event/_event.scss';
+
+
+/*....................................
+17. Services area start here
+....................................*/
+@import 'sass/services/_services.scss';
+
+
+/*....................................
+18. Counter area start here
+....................................*/
+@import 'sass/counter/_counter.scss';
+
+
+/*....................................
+19. Gallery area start here
+....................................*/
+@import 'sass/gallery/_gallery.scss';
+
+
+/*....................................
+20. Prayer area start here
+....................................*/
+@import 'sass/prayer/_prayer.scss';
+
+
+
+/*....................................
+21. Testimonial area start here
+....................................*/
+@import 'sass/testimonial/_testimonial.scss';
+

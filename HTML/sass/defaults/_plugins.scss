@@ -1,0 +1,68 @@
+/***All plugins Reset***/
+.owl-controls{
+	margin-top: 51px !important;
+	.owl-pagination{
+		.owl-page{
+			span{
+				margin:0 5px;
+				width: 10px;
+				height: 10px;
+				background: #e4e4e4 !important;
+				opacity: 1;
+			}
+			&.active{
+				span{
+					background: $primary-color !important;
+				}
+			}
+		}
+	}
+}
+.testimonial-area{
+	.owl-wrapper{
+		padding-top: 17px !important;
+	}
+	.owl-controls{
+		margin-top: 51px !important;
+
+		.owl-pagination{
+			.owl-page{
+				span{
+					margin:0 5px;
+					width: 10px;
+					height: 10px;
+					background: #7f7e7e !important;
+					opacity: 1;
+				}
+				&.active{
+					span{
+						background: $hover-color !important;
+					}
+				}
+			}
+		}
+	}
+}
+.brand-area{
+	.owl-controls{
+		position: absolute;
+		top: -118px;
+		right: 0;
+		margin: 0!important;
+		.owl-pagination{
+
+		}
+	}
+}
+#Container .mix {
+    display: none;
+}
+.mfp-title{
+	display: none !important;
+}
+.mfp-wrap{
+	z-index: 9999999;
+}
+.mfp-bg{
+	z-index: 999999;
+}

@@ -1,0 +1,407 @@
+.prayer-area{
+	.info{
+		overflow: hidden;
+		padding-top: 130px;
+		.sun{
+			height: 950px;
+			width: 950px;
+			margin: 0 auto -475px;
+			border:8px solid #f5f5f5;
+			border-radius: 100%;
+			position: relative;
+			.mid{
+				width: 288px;
+				height: 288px;
+				border-radius: 100%;
+				background: $hover-color;
+				position: absolute;
+				top: 35%;
+				display: block;
+				left: 0;
+				right: 0;
+				margin: auto;
+				text-align: center;
+				line-height: 144px;
+				transition: $transition;
+				&:before{
+					content:'';
+					position: absolute;
+					left: -25px;
+					right: -25px;
+					top: -25px;
+					bottom: -25px;
+					border-radius: 100%;
+					border: 3px solid $primary-color;
+				}
+				&:after{
+					content: '';
+					position: absolute;
+					left: 50%;
+					right: 50%;
+					top: 50%;
+					bottom: 50%;
+					background: $primary-color;
+					border-radius: 100%;
+					transition: $transition;
+				}
+				&:hover{
+					&:after{
+						left:0;
+						right: 0;
+						top: 0;
+						bottom: 0;
+					}
+				}
+				img{
+					display: inline-block;
+					position: relative;
+					z-index: 999;
+				}
+			}
+			.ico1{
+				position: absolute;
+				left: -48px;
+    			top: 251px;
+				display: block;
+				width: 140px;
+				height: 140px;
+				background: #f5f5f5;
+				border-radius: 100%;
+				text-align: center;
+				cursor: pointer;
+				transition: $transition;
+				line-height: 168px;
+				background-repeat: no-repeat;
+				background-position: center;
+				&:after{
+					content: '';
+				    position: absolute;
+				    top: 24px;
+				    left: 0;
+				    right: 0;
+				    height: 60px;
+				    text-align: center;
+				    margin: auto;
+				    background-image: url(images/icon/2.png);
+				    background-repeat: no-repeat;
+				    background-position: center;
+				    transition: $transition;
+				}
+				&:before{
+					content: '';
+				    position: absolute;
+				    left: 105%;
+				    right: 0;
+				    transform: rotate(19deg);
+				    top: 94%;
+				    bottom: 0;
+				    width: 180px;
+				    height: 2px;
+				    background: #f5f5f5;
+				    transition: $transition;
+				}
+				&:hover{
+					background-color: $primary-color;
+					strong{
+						color: #fff;
+					}
+					&:before{
+						background:$primary-color;
+					}
+					&:after{
+						background: url(images/icon/2h.png);
+						background-repeat: no-repeat;
+				    	background-position: center;
+					}
+				}
+				img{
+				}
+				strong{
+					display: inline;
+					margin-top: 5px;
+					font-size: 20px;
+					color: #111111;
+					text-transform: uppercase;
+					font-weight: 700;
+					font-family: $title-font;
+					transition: $transition;
+				}
+			}
+			.ico2{
+				position: absolute;
+				left: 104px;
+    			top: 27px;
+				display: block;
+				width: 140px;
+				height: 140px;
+				background: #f5f5f5;
+				border-radius: 100%;
+				text-align: center;
+				cursor: pointer;
+				transition: $transition;
+				line-height: 168px;
+				background-repeat: no-repeat;
+				background-position: center;
+				&:after{
+					content: '';
+				    position: absolute;
+				    top: 24px;
+				    left: 0;
+				    right: 0;
+				    height: 60px;
+				    text-align: center;
+				    margin: auto;
+				    background-image: url(images/icon/3.png);
+				    background-repeat: no-repeat;
+				    background-position: center;
+				    transition: $transition;
+				}
+				&:before{
+					content: '';
+				    position: absolute;
+				    left: 72%;
+				    transform: rotate(49deg);
+				    top: 148%;
+				    bottom: 0;
+				    width: 180px;
+				    height: 2px;
+				    background: #f5f5f5;
+				    transition: $transition;
+				}
+				&:hover{
+					background-color: $primary-color;
+					strong{
+						color: #fff;
+					}
+					&:before{
+						background:$primary-color;
+					}
+					&:after{
+						background: url(images/icon/3h.png);
+						background-repeat: no-repeat;
+				    	background-position: center;
+					}
+				}
+				img{
+				}
+				strong{
+					display: inline;
+					margin-top: 5px;
+					font-size: 20px;
+					color: #111111;
+					text-transform: uppercase;
+					font-weight: 700;
+					font-family: $title-font;
+					transition: $transition;
+				}
+			}
+			.ico3{
+				position: absolute;
+				left: 0;
+				right: 0;
+				margin: auto;
+				top: -74px;
+				display: block;
+				width: 140px;
+				height: 140px;
+				background: #f5f5f5;
+				border-radius: 100%;
+				text-align: center;
+				cursor: pointer;
+				transition: $transition;
+				line-height: 168px;
+				background-repeat: no-repeat;
+				background-position: center;
+				&:after{
+					content: '';
+				    position: absolute;
+				    top: 24px;
+				    left: 0;
+				    right: 0;
+				    height: 60px;
+				    text-align: center;
+				    margin: auto;
+				    background-image: url(images/icon/4.png);
+				    background-repeat: no-repeat;
+				    background-position: center;
+				    transition: $transition;
+				}
+				&:before{
+					content: '';
+				    position: absolute;
+				    left: 0;
+				    margin: auto;
+				    right: 0;
+				    transform: rotate(0deg);
+				    top: 119%;
+				    width: 2px;
+				    height: 180px;
+				    background: #f5f5f5;
+				    transition: $transition;
+				}
+				&:hover{
+					background-color: $primary-color;
+					strong{
+						color: #fff;
+					}
+					&:before{
+						background:$primary-color;
+					}
+					&:after{
+						background: url(images/icon/4h.png);
+						background-repeat: no-repeat;
+				    	background-position: center;
+					}
+				}
+				img{
+				}
+				strong{
+					display: inline;
+					margin-top: 5px;
+					font-size: 20px;
+					color: #111111;
+					text-transform: uppercase;
+					font-weight: 700;
+					font-family: $title-font;
+					transition: $transition;
+				}
+			}
+			.ico4{
+				position: absolute;
+				right: 104px;
+    			top: 27px;
+				display: block;
+				width: 140px;
+				height: 140px;
+				background: #f5f5f5;
+				border-radius: 100%;
+				text-align: center;
+				cursor: pointer;
+				transition: $transition;
+				line-height: 168px;
+				background-repeat: no-repeat;
+				background-position: center;
+				&:after{
+					content: '';
+				    position: absolute;
+				    top: 24px;
+				    left: 0;
+				    right: 0;
+				    height: 60px;
+				    text-align: center;
+				    margin: auto;
+				    background-image: url(images/icon/5.png);
+				    background-repeat: no-repeat;
+				    background-position: center;
+				    transition: $transition;
+				}
+				&:before{
+					content: '';
+				    position: absolute;
+				    right: 72%;
+				    transform: rotate(-49deg);
+				    top: 148%;
+				    bottom: 0;
+				    width: 180px;
+				    height: 2px;
+				    background: #f5f5f5;
+				    transition: $transition;
+				}
+				&:hover{
+					background-color: $primary-color;
+					strong{
+						color: #fff;
+					}
+					&:before{
+						background:$primary-color;
+					}
+					&:after{
+						background: url(images/icon/5h.png);
+						background-repeat: no-repeat;
+				    	background-position: center;
+					}
+				}
+				img{
+				}
+				strong{
+					display: inline;
+					margin-top: 5px;
+					font-size: 20px;
+					color: #111111;
+					text-transform: uppercase;
+					font-weight: 700;
+					font-family: $title-font;
+					transition: $transition;
+				}
+			}
+			.ico5{
+				position: absolute;
+				right: -40px;
+    			top: 251px;
+				display: block;
+				width: 140px;
+				height: 140px;
+				background: #f5f5f5;
+				border-radius: 100%;
+				text-align: center;
+				cursor: pointer;
+				transition: $transition;
+				line-height: 168px;
+				background-repeat: no-repeat;
+				background-position: center;
+				&:after{
+					content: '';
+				    position: absolute;
+				    top: 24px;
+				    left: 0;
+				    right: 0;
+				    height: 60px;
+				    text-align: center;
+				    margin: auto;
+				    background-image: url(images/icon/6.png);
+				    background-repeat: no-repeat;
+				    background-position: center;
+				    transition: $transition;
+				}
+				&:before{
+					content: '';
+				    position: absolute;
+				    right: 105%;
+				    transform: rotate(-19deg);
+				    top: 94%;
+				    bottom: 0;
+				    width: 180px;
+				    height: 2px;
+				    background: #f5f5f5;
+				    transition: $transition;
+				}
+				&:hover{
+					background-color: $primary-color;
+					strong{
+						color: #fff;
+					}
+					&:before{
+						background:$primary-color;
+					}
+					&:after{
+						background: url(images/icon/6h.png);
+						background-repeat: no-repeat;
+				    	background-position: center;
+					}
+				}
+				img{
+				}
+				strong{
+					display: inline;
+					margin-top: 5px;
+					font-size: 20px;
+					color: #111111;
+					text-transform: uppercase;
+					font-weight: 700;
+					font-family: $title-font;
+					transition: $transition;
+				}
+			}
+		}
+	}
+}

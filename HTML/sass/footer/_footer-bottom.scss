@@ -1,0 +1,32 @@
+footer{
+	.footer-bottom{
+		.foo-bot{
+			border-top: 1px solid rgba(255, 255, 255, 0.1);
+			display: block;
+			padding: 30px 0;
+			.logo-area{
+				a{
+					img{
+
+					}
+				}
+			}
+			.copyright{
+				p{
+					padding: 10px 0;
+					margin: 0;
+					span{
+						color: $primary-color;
+					}
+					a{
+						color: $hover-color;
+						margin: 0;
+						&:hover{
+							color:$primary-color;
+						}
+					}
+				}
+			}
+		}
+	}
+}

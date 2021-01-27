@@ -1,0 +1,107 @@
+.slider-area{
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+	.carousel-inner{
+		.carousel-item{
+			&:before{
+				content:'';
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				background: rgba(0, 0, 0, 0.7);
+			}
+			img{
+				display: block;
+				width: 100%;
+			}
+			.carousel-caption{
+				bottom: inherit;
+				top: 30%;
+				.content{
+					img{
+						width: auto;
+						margin: 0 auto 45px;
+					}
+					h2{
+						margin: 0 0 50px;
+						font-size: 68px;
+						text-transform: uppercase;
+						.primary{
+							color: $primary-color;
+						}
+						.hover{
+							color: $hover-color;
+						}
+					}
+					a{
+
+					}
+				}
+			}
+		}
+	}
+	.carousel-control{
+		position: absolute;
+		width: 80px;
+		height: 80px;
+		border-radius: 100%;
+		color: #fff;
+		font-size: 24px;
+		background: rgba(255, 255, 255, 0.1);
+		opacity: 1;
+		top: 50%;
+		transition: $transition;
+		i{
+			position: relative;
+			z-index: 999;
+		}
+		&:after{
+			content:'';
+			position: absolute;
+			left: 50%;
+			right: 50%;
+			top: 50%;
+			bottom: 50%;
+			background:$primary-color;
+			border-radius: 100%;
+			transition: $transition;
+		}
+		&:hover{
+			&:after{
+				content:'';
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				background:$primary-color;
+				border-radius: 100%;
+			}
+		}
+		&.carousel-control-prev{
+			left: -7%;
+			transition: all 0.5s;
+		}
+		&.carousel-control-next{
+			right: -7%;
+			transition: all 0.5s;
+		}
+	}
+	&:hover{
+		.carousel-control{
+			&.carousel-control-prev{
+				left: 5%;
+			}
+			&.carousel-control-next{
+				right: 5%;
+			}
+		}
+	}
+}
+.msj_slider_padding{
+	padding-left:0; 
+	padding-right:0;
+}

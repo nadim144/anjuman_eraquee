@@ -1,0 +1,44 @@
+.breadcumb-area{
+	position: relative;
+	z-index: inherit !important;
+	background: url(images/breadcumb/1.jpg); 
+	&:after{
+		background:rgba(0, 0, 0, 0.7);
+	}
+	.breadcumb{
+		position: relative;
+		z-index: 999;
+		display: block;
+		padding: 110px 0 90px;
+		h2{
+			color: #fff;
+			font-size: 40px;
+			text-transform: uppercase;
+			margin: 0 0 10px;
+			display: block;
+		}
+		ul{
+			display: inline-block;
+			background: rgba(0, 0, 0, 0.5);
+			padding: 3px 5px;
+			li{
+				padding: 0 6px;
+				a{
+					color: #707070;
+					text-transform: capitalize;
+				}
+				i{
+					color: #707070;
+				}
+				&:last-child{
+					a{
+						color: $primary-color;
+						&:hover{
+							color:$hover-color;
+						}
+					}
+				}
+			}
+		}
+	}
+}
