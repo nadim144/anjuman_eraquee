@@ -1,5 +1,5 @@
 <?php 
-$link = mysqli_connect("localhost", "root", "", "anjuman_user");
+$link = mysqli_connect("localhost", "codecxss_anjuman", "anjuman!@#2021", "codecxss_anjuman");
 
 if($link === false){
     die("ERROR: Could not connect. " . mysqli_connect_error());
