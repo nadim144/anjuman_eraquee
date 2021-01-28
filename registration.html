@@ -242,71 +242,255 @@
                             <fieldset>
                                 <div class="row">
                                     <div class="col-sm-4 col-xs-12 feld">
-                                        <label>Input your Name</label>
-                                        <input type="text" name="name" placeholder="Your Name *">
-                                        <span><i class="fa fa-user"></i></span>
+                                        <label>Enter your Name</label>
+                                        <div class=" feld">
+                                            <input type="text" name="username" placeholder="Your Name *" required>
+                                            <span><i class="fa fa-user"></i></span>
+                                        </div>
                                     </div>
                                     <div class="col-sm-4 col-xs-12 feld">
-                                        <label>Input your Father Name</label>
-                                        <input type="text" name="fathername" placeholder="Father Name *">
-                                        <span><i class="fa fa-user"></i></span>
+                                        <label>Enter Father's Name</label>
+                                        <div class=" feld">
+                                            <input type="text" name="fathername" placeholder="Father Name *" required>
+                                            <span><i class="fa fa-user"></i></span>
+                                        </div>
                                     </div>
                                     <div class="col-sm-4 col-xs-12 feld">
-                                        <label>Input your Grand Father Name</label>
-                                        <input type="text" name="grandfathername" placeholder="Grand Father Name *">
-                                        <span><i class="fa fa-user"></i></span>
+                                        <label>Enter Mother's Name</label>
+                                        <div class=" feld">
+                                            <input type="text" name="mothername" placeholder="Mother Name *" required>
+                                            <span><i class="fa fa-user"></i></span>
+                                        </div>
                                     </div>
                                 </div>
                             </fieldset>
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-sm-4 col-xs-12 feld">
+                                        <label>Enter Grandfather's (Dada) Name</label>
+                                        <div class=" feld">
+                                            <input type="text" name="grandfathername" placeholder="Grand Father Name (Dada) *" required>
+                                            <span><i class="fa fa-user"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-xs-12 feld">
+                                        <label>Native Place</label>
+                                        <div class=" feld">
+                                            <input type="text" name="nativeplace" placeholder="Native Place*" required>
+                                            <span><i class="fa fa-user"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-xs-12 feld">
+                                        <label>Enter your Age</label>
+                                        <div class=" feld">
+                                            <input type="text" name="age" placeholder="Enter your Age *" required>
+                                            <span><i class="fa fa-user"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <!-- Gender and Marital Status -->
                             <fieldset>
                                 <div class="row">
                                     <div class="col-sm-4 col-xs-12 feld">
                                         <div class="genderselcts">
-                                            <!-- <h4>Select Your Gender</h4> -->
-                                            <label>Select your gender : </label>
+                                            <label>Select Your Gender *</label>
                                         </div>
                                         <div class="row custm_radio">
-                                            <div class="col-md-4">
+                                            <div class="col-md-4 col-4">
                                                 <label for="male">Male</label>
-                                                <input type="radio" id="male" name="gender" value="male">
+                                                <input type="radio" id="male" name="gender" value="male" required>
                                             </div>
-                                            <div class="col-md-4">
+                                            <div class="col-md-4 col-4">
                                                 <label for="female">Female</label>
-                                                <input type="radio" id="female" name="gender" value="female">
+                                                <input type="radio" id="female" name="gender" value="female" required>
                                             </div>
                                         </div>
-
-
-
-
-
-
-
-
-
+                                    </div>
+                                    <div class="col-sm-8 col-xs-12 feld">
+                                        <div class="maritaloption">
+                                            <label>Marital Status *</label>
+                                        </div>
+                                        <div class="row custm_radio">
+                                            <div class="col-md-4 col-4">
+                                                <label for="married">Married</label>
+                                                <input type="radio" id="married" name="maritalstatus" value="married" required>
+                                            </div>
+                                            <div class="col-md-4 col-4">
+                                                <label for="unmarried">UnMarried</label>
+                                                <input type="radio" id="unmarried" name="maritalstatus" value="unmarried" required>
+                                            </div>
+                                            <div class="col-md-4 col-4">
+                                                <label for="divorced">Divorced</label>
+                                                <input type="radio" id="divorced" name="maritalstatus" value="divorced" required>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </fieldset>
+
+                            <!-- Present Address -->
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-sm-4 col-xs-12 feld">
+                                        <label>Present Address</label>
+                                        <input type="text" name="presentaddress" placeholder="Present Address *" required>
+                                    </div>
+                                    <div class="col-sm-4 col-xs-12 feld">
+                                        <label>Village or At+Post</label>
+                                        <input type="text" name="presentvillatpost" placeholder="Village or At+Post *" required>
+                                    </div>
+                                    <div class="col-sm-4 col-xs-12 feld">
+                                        <label>District</label>
+                                        <input type="text" name="presentdistrict" placeholder="District *" required>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-sm-4 col-xs-12 feld">
+                                        <label>Pin Code</label>
+                                        <input type="text" name="presentpincode" placeholder="Pin Code *" required>
+                                    </div>
+                                    <div class="col-sm-4 col-xs-12 feld">
+                                        <label>State</label>
+                                        <input type="text" name="presentstate" placeholder="State *" required>
+                                    </div>
+                                    <div class="col-sm-4 col-xs-12 feld">
+                                        <label>Country</label>
+                                        <input type="text" name="presentcountry" placeholder="Country *" required>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <!-- Checkbox: Present address is same as permanent address -->
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <input type="checkbox" value="same as present address" class="checkb" id="presentissameasearmanentaddress" name="presentaddresstopermanent" value="presentissameasearmanentaddress">
+                                        <label for="presentissameasearmanentaddress">Present address is same as permanent address</label>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <!-- Permanent Address -->
+                            <div class="sameaddress">
+                                <fieldset>
+                                    <div class="row">
+                                        <div class="col-sm-4 col-xs-12 feld">
+                                            <label>Permanent Address</label>
+                                            <input type="text" name="permanentaddress" placeholder="Permanent Address *">
+                                        </div>
+                                        <div class="col-sm-4 col-xs-12 feld">
+                                            <label>Village or At+Post</label>
+                                            <input type="text" name="permanentvillatpost" placeholder="Village or At+Post *">
+                                        </div>
+                                        <div class="col-sm-4 col-xs-12 feld">
+                                            <label>District</label>
+                                            <input type="text" name="permanentdistrict" placeholder="District *">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset>
+                                    <div class="row">
+                                        <div class="col-sm-4 col-xs-12 feld">
+                                            <label>Pin Code</label>
+                                            <input type="text" name="permanentpincode" placeholder="Pin Code *">
+                                        </div>
+                                        <div class="col-sm-4 col-xs-12 feld">
+                                            <label>State</label>
+                                            <input type="text" name="permanentstate" placeholder="State *">
+                                        </div>
+                                        <div class="col-sm-4 col-xs-12 feld">
+                                            <label>Country</label>
+                                            <input type="text" name="permanentcountry" placeholder="Country *">
+                                        </div>
+                                    </div>
+                                </fieldset>
+
+                            </div>
 
 
                             <fieldset>
                                 <div class="row">
                                     <div class="col-sm-4 col-xs-12 feld">
-                                        <input type="text" placeholder="Email *">
-                                        <span><i class="fa fa-envelope"></i></span>
+                                        <label>Your Qualification</label>
+                                        <div class="catagoris">
+                                            <select name="qulification" required>
+                                                    <option value="">Please Select Qualification</option>
+                                                    <option value="High School 10th">High School 10th</option>
+                                                    <option value="Intermediate 12th">Intermediate 12th</option>
+                                                    <option value="Graduation">Graduation</option>
+                                                    <option value="Post Graduation">Post Graduation</option>
+                                                    <option value="M.Phil">M.Phil</option>
+                                                    <option value="Ph.D">Ph.D</option>
+                                                </select>
+                                        </div>
                                     </div>
                                     <div class="col-sm-4 col-xs-12 feld">
-                                        <input type="text" placeholder="Subject">
-                                        <span><i class="fa fa-star"></i></span>
+                                        <label>Qualification Details</label>
+                                        <input type="text" name="qualificationdetails" placeholder="B.A/B.Sc/B.Tech/MBBS/M.Tec *" required>
                                     </div>
                                 </div>
                             </fieldset>
                             <fieldset>
-                                <div class="feld">
-                                    <textarea placeholder="Message"></textarea>
-                                    <span class="msg"><i class="fa fa-pencil-square-o"></i></span>
+                                <div class="row">
+                                    <div class="col-sm-4 col-xs-12 feld">
+                                        <label>Your Occupation</label>
+                                        <div class="catagoris">
+                                            <select name="occupation" required>
+                                                    <option value="">Select Occupation</option>
+                                                    <option value="Business">Business</option>
+                                                    <option value="Entrepreneur">Entrepreneur</option>
+                                                    <option value="Private Sector">Private Sector</option>
+                                                    <option value="Government Employee">Government Employee</option>
+                                                </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-xs-12 feld">
+                                        <label>Occupation Details</label>
+                                        <input type="text" name="occupationdetails" placeholder="Teacher/Engineer/Doctor/lawyer *" required>
+                                    </div>
                                 </div>
                             </fieldset>
+
+                            <!-- Email, Phone number, WhatsApp or Signal Number -->
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-sm-4 col-xs-12">
+                                        <label>Email</label>
+                                        <div class=" feld">
+                                            <input type="text" name="email" placeholder="Email *" required>
+                                            <span><i class="fa fa-envelope"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-xs-12">
+                                        <label>Phone  Number</label>
+                                        <div class=" feld">
+                                            <input type="text" name="phonenumber" placeholder="Phone Number *" required>
+                                            <span><i class="fa fa-phone"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-xs-12">
+                                        <label>WhatsApp Number</label>
+                                        <div class=" feld">
+                                            <input type="text" name="whatsappnumber" placeholder="WhatsApp or Signal  Number *" required>
+                                            <span><i class="fa fa-whatsapp"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset>
+                                <div class="feld">
+                                    <label>Write message Suggestion or Feedback (Optional)</label>
+                                    <textarea name="messageinfo" placeholder="Write message Suggestion or Feedback ..."></textarea>
+                                    <!-- <span class="msg"><i class="fa fa-pencil-square-o"></i></span> -->
+                                </div>
+                            </fieldset>
+
+
                             <div class="btn-area text-center">
                                 <!-- <a href="#" class="btn4"><span>Submit</span></a> -->
                                 <button class="btn4" type="submit" name="submit"><span>Submit</span></button>
@@ -505,6 +689,16 @@
           }
           google.maps.event.addDomListener(window, 'load', initialize);
         </script>-->
+
+    <script>
+        $('input#presentissameasearmanentaddress').change(function() {
+            if ($(this).is(":checked")) {
+                $('.sameaddress').addClass("hide");
+            } else {
+                $('.sameaddress').removeClass("hide");
+            }
+        });
+    </script>
 </body>
 
 </html>
