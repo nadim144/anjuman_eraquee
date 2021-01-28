@@ -1,5 +1,6 @@
 <?php 
 $link = mysqli_connect("localhost", "codecxss_anjuman", "anjuman!@#2021", "codecxss_anjuman");
+// $link = mysqli_connect("localhost", "root", "", "anjuman_user");
 
 if($link === false){
     die("ERROR: Could not connect. " . mysqli_connect_error());
@@ -36,6 +37,23 @@ $occupation_details = mysqli_real_escape_string($link, $_REQUEST['occupationdeta
 $message = mysqli_real_escape_string($link, $_REQUEST['messageinfo']);
  
 
+
+$checkexistinguser="select * from user_registrtion where (email='$email' or phonenumber='$phonenumber');";
+$res=mysqli_query($link, $checkexistinguser);
+if (mysqli_num_rows($res) > 0) 
+{
+        
+    $row = mysqli_fetch_assoc($res);
+    if($email==isset($row['email']) or $phonenumber==isset($row['phonenumber']))
+    {
+        // echo '<script>alert("user already exists") </script>';
+        echo "<script>if(confirm('user already exists'))
+        {
+            document.location.href='registration.html'
+        };</script>";
+    }       
+}
+
 $sql = "INSERT INTO user_registrtion (username, fathername, mothername, grandfathername, nativeplace,
 age, gender, maritalstatus, presentaddress, presentvillatpost, presentdistrict, presentpincode, presentstate, presentcountry, presentaddresstopermanent,
 permanentaddress, permanentvillatpost, permanentdistrict, permanentpincode, permanentstate, permanentcountry, email, phonenumber, whatsappnumber,
@@ -47,12 +65,19 @@ qulification, qualificationdetails, occupation, occupationdetails, messageinfo) 
 
 
 if(mysqli_query($link, $sql)){
+if(mysqli_query($link, $sql))
+{
     //echo "Records added successfully.";
-    echo '<script>alert("Records added successfully") </script>';
-} else{
+    // echo '<script>alert("Records added successfully") </script>';
+    echo "<script>if(confirm('Your Record Successfully Inserted. Now Login'))
+    {
+        document.location.href='registration.html'
+    };</script>";
+} 
+else
+{
     echo "ERROR: Could not able to execute $sql. " . mysqli_error($link);
 }
- 
+
 mysqli_close($link);
- 
 ?>
