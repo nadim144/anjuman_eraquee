@@ -3478,6 +3478,18 @@ header .main-header .menu-area nav ul li.drop-menu:hover .down-menu {
     transition: all 0.3s;
 }
 
+.contact-area .form-area form fieldset select {
+    width: 100%;
+    border: 1px solid #e1e1e1;
+    height: 50px;
+    font-size: 14px;
+    text-transform: capitalize;
+    color: #797979;
+    padding: 0 20px;
+    position: relative;
+    transition: all 0.3s;
+}
+
 .contact-area .form-area form fieldset .feld input:focus {
     border: 1px solid #009146;
 }
@@ -6200,7 +6212,7 @@ footer .footer-top .footer-widget .twit-foo .twit-list .post p a:hover {
     height: 22px !important;
 }
 
-.genderselcts h4 {
+.genderselcts .maritaloption h4 {
     margin-bottom: 16px;
     font-size: 17px;
     color: #797979;
@@ -6208,4 +6220,8 @@ footer .footer-top .footer-widget .twit-foo .twit-list .post p a:hover {
     vertical-align: baseline;
     line-height: 26px;
     font-weight: 400;
+}
+
+.hide {
+    display: none !important;
 }
