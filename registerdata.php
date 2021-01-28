@@ -38,7 +38,9 @@ $message = mysqli_real_escape_string($link, $_REQUEST['messageinfo']);
  
 
 
+
 $checkexistinguser="select * from user_registrtion where (email='$email' or phonenumber='$phonenumber');";
+
 $res=mysqli_query($link, $checkexistinguser);
 if (mysqli_num_rows($res) > 0) 
 {
@@ -64,7 +66,6 @@ qulification, qualificationdetails, occupation, occupationdetails, messageinfo) 
 '$occupation', '$occupation_details', '$message')";
 
 
-if(mysqli_query($link, $sql)){
 if(mysqli_query($link, $sql))
 {
     //echo "Records added successfully.";
