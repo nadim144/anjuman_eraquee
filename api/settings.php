@@ -1,0 +1,26 @@
+<?php
+header('Content-Type: application/json');
+header('Access-Control-Allow-Origin: *');
+header('Cache-Control: no-cache, no-store, must-revalidate');
+
+$settingsFile = __DIR__ . '/../data/settings.json';
+
+if (file_exists($settingsFile)) {
+    echo file_get_contents($settingsFile);
+} else {
+    // Default fallback settings
+    $defaultSettings = [
+        "topbar_phone_1" => "+91 9006297386",
+        "topbar_phone_2" => "+91 9472502044",
+        "topbar_phone_3" => "+91 9738455404",
+        "contact_email" => "info@anjumaneraquee.org",
+        "convenor_name" => "Abul Farah Sb.",
+        "convenor_phone" => "+91 9006297386",
+        "whatsapp_number" => "+91 9006297386",
+        "office_address" => "Anjuman Eraquee INDIA",
+        "youtube_video_url" => "https://www.youtube.com/watch?v=sn4zqErnfvc"
+    ];
+    echo json_encode($defaultSettings);
+}
+?>
+
