@@ -1,9 +1,20 @@
 <?php 
-$link = mysqli_connect("localhost", "codecxss_anjuman", "anjuman!@#2021", "codecxss_anjuman");
-// $link = mysqli_connect("localhost", "root", "", "anjuman_user");
+$dbConfigs = [
+    ['localhost', 'codecxss_anjuman', 'anjuman!@#2021', 'codecxss_anjuman'],
+    ['localhost', 'root', '', 'codecxss_anjuman'],
+    ['localhost', 'root', '', 'anjuman_user']
+];
 
-if($link === false){
-    die("ERROR: Could not connect. " . mysqli_connect_error());
+$link = false;
+foreach ($dbConfigs as $cfg) {
+    $link = @mysqli_connect($cfg[0], $cfg[1], $cfg[2], $cfg[3]);
+    if ($link) {
+        break;
+    }
+}
+
+if ($link === false) {
+    die("ERROR: Could not connect to MySQL database. Please make sure MySQL is running in XAMPP Control Panel and database 'codecxss_anjuman' or 'anjuman_user' exists.");
 }
 
 $name = mysqli_real_escape_string($link, $_REQUEST['username']);

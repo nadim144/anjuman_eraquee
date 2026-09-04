@@ -83,6 +83,11 @@ This file tracks all development work done on the **Anjuman Eraquee India** webs
 ### 📝 Work Log — Created
 - Created this `work.md` file in `d:\Anjuman\` to track all development work date-wise.
 
+### 🐛 Registration Form DB Connection — Fixed
+- **Issue:** Registration form failed on local XAMPP with `Access denied for user 'codecxss_anjuman'@'localhost'`.
+- **Fix:** Updated `registerdata.php` with multi-environment fallback logic (tries live credentials `codecxss_anjuman` first, then falls back to local XAMPP `root` / `codecxss_anjuman` / `anjuman_user`).
+- **Files updated:** `d:\Anjuman\registerdata.php` & `C:\xampp\htdocs\Anjuman\registerdata.php`.
+
 ---
 
 ## 📋 Pending / Next Steps
