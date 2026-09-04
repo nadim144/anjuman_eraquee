@@ -28,16 +28,10 @@ $totalMembers = 0;
 $dbConnected = false;
 $recentMembers = [];
 
-$dbConfigs = [
-    ['localhost', 'codecxss_anjuman', 'anjuman!@#2021', 'codecxss_anjuman'],
-    ['localhost', 'root', '', 'anjuman_user'],
-    ['localhost', 'root', '', 'codecxss_anjuman']
-];
-
-foreach ($dbConfigs as $cfg) {
-    $conn = @mysqli_connect($cfg[0], $cfg[1], $cfg[2], $cfg[3]);
-    if ($conn) {
-        $dbConnected = true;
+require_once __DIR__ . '/../db.php';
+$conn = get_db_connection();
+if ($conn) {
+    $dbConnected = true;
         $res = @mysqli_query($conn, "SELECT COUNT(*) as cnt FROM user_registrtion");
         if ($res && $row = mysqli_fetch_assoc($res)) {
             $totalMembers = $row['cnt'];

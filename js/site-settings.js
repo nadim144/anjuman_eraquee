@@ -42,11 +42,15 @@
             });
         }
 
-        // 3. Update Topbar Login Link to point to admin/login.php
+        // 3. Update Header Login Links
         var loginLinks = document.querySelectorAll('.header-social a, .mobile-menu a');
         loginLinks.forEach(function (link) {
-            if (link.textContent.trim() === 'Login' || link.textContent.trim() === 'Login |') {
+            var text = link.textContent.trim();
+            if (text === 'Login' || text === 'Login |' || text === 'Admin Login') {
                 link.setAttribute('href', 'admin/login.php');
+            }
+            if (text === 'User Login' || text === 'User Login |') {
+                link.setAttribute('href', 'user-login.php');
             }
         });
 

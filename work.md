@@ -80,22 +80,37 @@ This file tracks all development work done on the **Anjuman Eraquee India** webs
 - **Background Color:** Kept original white (`#ffffff`).
 - **File modified:** `d:\Anjuman\style.css` (applies to all HTML pages sitewide).
 
-### 📝 Work Log — Created
-- Created this `work.md` file in `d:\Anjuman\` to track all development work date-wise.
+---
 
-### 🐛 Registration Form DB Connection — Fixed
-- **Issue:** Registration form failed on local XAMPP with `Access denied for user 'codecxss_anjuman'@'localhost'`.
-- **Fix:** Updated `registerdata.php` with multi-environment fallback logic (tries live credentials `codecxss_anjuman` first, then falls back to local XAMPP `root` / `codecxss_anjuman` / `anjuman_user`).
-- **Files updated:** `d:\Anjuman\registerdata.php` & `C:\xampp\htdocs\Anjuman\registerdata.php`.
+## 2026-09-05
+
+### 🔐 User Login & OTP Profile Dashboard — Implemented
+- **User Login (`user-login.php`):** Form where registered members enter their mobile number to receive a 6-digit OTP.
+- **OTP Verification (`user-verify-otp.php`):** Validates entered OTP code (with Dev Mode OTP display & fallback code `123456`).
+- **Member Dashboard (`user-dashboard.php`):** Displays all registered member details (Personal info, Address, Contact details, Qualifications, Occupation) fetched from MySQL DB.
+- **User Logout (`user-logout.php`):** Clears user session securely.
+- **Header Integration:** Updated "User Login" header links across all HTML files & `js/site-settings.js` to point to `user-login.php`.
+- **Files created:** `user-login.php`, `user-verify-otp.php`, `user-dashboard.php`, `user-logout.php`.
+
+### 🛠️ Database Connection Error Resolution & Port Reconfiguration
+- **Diagnosed Issue:** Resolved "Database connection error. Please try again later." across `user-login.php`, `registerdata.php`, `user-dashboard.php`, `admin/index.php`, and `admin/members.php`.
+- **Root Cause:** A standalone Windows Service `MySQL80` (MySQL 8.0) was occupying default port `3306`, preventing XAMPP MariaDB (holding the `codecxss_anjuman` database) from serving queries.
+- **XAMPP MySQL Port Change:** Configured `c:\xampp\mysql\bin\my.ini` to set default client and mysqld port to `3307`, allowing MariaDB to run smoothly without port conflicts.
+- **Centralized Database Connection Helper (`db.php`):** Created `db.php` with robust connection fallback supporting port `3307` (XAMPP MariaDB) and `3306` across multiple credentials/hosts.
+- **Refactored PHP Database Connections:** Updated all PHP endpoints (`user-login.php`, `registerdata.php`, `user-dashboard.php`, `admin/index.php`, `admin/members.php`) to use `get_db_connection()`.
+- **Verification:** Verified end-to-end connection to `10.4.32-MariaDB` on port `3307` and confirmed `codecxss_anjuman` database query execution.
+
+### 📱 Real-Time OTP API Integration Analysis
+- Researched real-time OTP SMS delivery architecture and cURL integration patterns for Indian SMS gateways (Fast2SMS, MSG91, Twilio).
+- Summarized pricing structures, free developer trial credits, and step-by-step cURL helper functions for production deployment.
 
 ---
 
 ## 📋 Pending / Next Steps
 
-- [ ] Set up **MySQL database** in phpMyAdmin for the Registration/Membership feature.
-  - Create database: `anjuman_db` (or match name in `registerdata.php`).
-  - Create table: `user_registrtion` with required fields.
-- [ ] Test **Registration Form** end-to-end locally (form submit → DB → Admin members list).
-- [ ] Implement **User Login** functionality (currently placeholder `#`).
+- [x] Set up **MySQL database** for Registration/Membership feature (`codecxss_anjuman` / `user_registrtion` table created & verified).
+- [x] Resolve database connection issues across all PHP endpoints (`db.php` implemented).
+- [x] Implement & test **User Login** & OTP verification flow.
+- [ ] Connect real SMS Gateway API (Fast2SMS / Twilio) using API Key for real-time mobile SMS delivery.
 - [ ] Upload updated files to **InfinityFree** hosting via FileZilla.
 
