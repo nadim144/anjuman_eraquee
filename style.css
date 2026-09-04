@@ -1634,7 +1634,7 @@ header .main-header {
 header .main-header .logo-area a {
     display: block;
     padding: 0;
-    line-height: 117px;
+    line-height: 90px;
 }
 
 header .main-header .search-box {
@@ -1821,7 +1821,7 @@ header .main-header .menu-area nav ul li.menu-btn {
 }
 
 header .main-header .menu-area nav ul li.menu-btn li {
-    line-height: 117px;
+    line-height: 90px;
 }
 
 header .main-header .menu-area nav ul li.menu-btn li .search-ico {
@@ -1854,7 +1854,7 @@ header .main-header .menu-area nav ul li a {
     font-family: "Droid Sans", sans-serif;
     text-transform: capitalize;
     display: block;
-    line-height: 117px;
+    line-height: 90px;
     padding: 0 20px;
     font-weight: bolder;
 }
