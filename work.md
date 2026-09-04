@@ -1,75 +1,96 @@
-# Work Notes — Anjuman Eraquee INDIA
+# Anjuman Eraquee INDIA — Work Log
 
-Repo: `nadim144/anjuman_eraquee` · Branch: `arena/01a06d4b-anjuman-eraquee` (from `dev`)
+This file tracks all development work done on the **Anjuman Eraquee India** website project, organized date-wise.
 
-## 1. What this project is
+---
 
-A static HTML/CSS/jQuery website for the Anjuman Eraquee INDIA organisation, with a
-small PHP layer for member registration and a lightweight admin panel.
+## 2026-09-01
 
-## 2. Structure
+### 🔧 Hosting Troubleshooting (InfinityFree)
+- Diagnosed that the deployed site on InfinityFree was missing CSS, JS, and image files.
+- Root cause: folder upload failures via the web-based file manager (filemanager.ai).
+- **Solution recommended:** Use FileZilla (FTP client) or Windows File Explorer FTP to upload entire folder structure correctly.
+- Provided step-by-step guide to upload files via FileZilla to InfinityFree hosting (`anjumaneraquee.wuaze.com`).
 
-| Path | Purpose |
-|---|---|
-| `index.html`, `about.html`, `contact.html`, `event.html`, `blog*.html`, `causes-*.html`, `gallery-col-*.html` | Public site pages |
-| `statelevel.html`, `districtlevel.html`, `blocklevel.html`, `coreexecutive.html` | Committee / leadership listings |
-| `registration.html`, `matrimonialregistration.html` | Member & matrimonial forms |
-| `registerdata.php` | Form handler — writes submissions to MySQL |
-| `admin/` | `login.php`, `auth.php`, `index.php`, `members.php`, `settings.php`, `logout.php` |
-| `api/settings.php` | Serves `data/settings.json` as JSON (with hardcoded fallback) |
-| `data/settings.json` | Editable site settings (phones, email, convenor, WhatsApp, address, YouTube URL) |
-| `js/site-settings.js` | Client-side hydration of those settings into the topbar/contact areas |
-| `css/`, `sass/`, `style.scss` → `style.css` | Bootstrap-based theme + custom SCSS |
-| `js/` | jQuery plugins: owl carousel, bxslider, magnific-popup, wow, waypoints, isotope, meanmenu |
-| `fonts/`, `images/` | Static assets |
+### 🎨 Slider Text Highlight Color Change
+- **Issue:** Certain slider caption words were highlighted in **orange** (`#e5ae49`).
+- **Change:** Updated highlight color to **light blue** (`#38bdf8`).
+- **Files modified:**
+  - `d:\Anjuman\style.css`
 
-## 3. How it works
+---
 
-- Pages are plain HTML; shared config is *not* templated — `js/site-settings.js`
-  fetches `api/settings.php` at runtime and rewrites phone numbers, email,
-  WhatsApp link, address and the embedded YouTube video.
-- `admin/settings.php` edits `data/settings.json`; `admin/members.php` lists
-  registrations from MySQL. Auth is a PHP session guard in `admin/auth.php`.
-- `registration.html` POSTs to `registerdata.php`, which escapes inputs with
-  `mysqli_real_escape_string` and inserts them.
+## 2026-09-03
 
-## 4. Running locally
+### 🛡️ Admin Panel — Created
+- Built a full custom **PHP Admin Panel** under `d:\Anjuman\admin\`.
+- **Login credentials:** Username: `Admin` | Password: `Admin`
+- **Features:**
+  - Session-based authentication.
+  - Dashboard with quick stats.
+  - Site Settings editor (phone numbers, emails).
+  - Registered Members directory (reads from MySQL DB).
+- **Files created:**
+  - `admin/auth.php` — Session authentication guard.
+  - `admin/login.php` — Login form.
+  - `admin/logout.php` — Session destroy & redirect.
+  - `admin/index.php` — Admin dashboard.
+  - `admin/settings.php` — Content editor (phone numbers, etc.).
+  - `admin/members.php` — Members listing from DB.
+  - `admin/css/admin.css` — Admin panel styling.
 
-```bash
-php -S 0.0.0.0:8080 -t .
-# http://localhost:8080/index.html   admin: /admin/login.php
-```
-Requires PHP with `mysqli` and a MySQL database for registration/members pages.
-Settings/admin-settings work without a DB; registration does not.
+### ⚙️ Dynamic Content System — Created
+- Created a **JSON-based settings system** so Admin Panel changes reflect on the live site without a database for basic content.
+- **Files created:**
+  - `data/settings.json` — Stores editable site settings (phone numbers, emails, etc.).
+  - `api/settings.php` — PHP API endpoint that serves `settings.json`.
+  - `js/site-settings.js` — Frontend JS that fetches settings and injects them into all HTML pages dynamically.
+- **Script tag injected** into all `.html` files in the project to load `site-settings.js`.
 
-## 5. Issues found (prioritised)
+### 📞 Topbar Phone Numbers — Made Dynamic
+- Phone numbers in `.header-event .count-list` (topbar) are now dynamically updated from `data/settings.json`.
+- Admin can change phone numbers in Admin Panel → Site Settings → they instantly reflect on all pages.
 
-**Security — must fix before/at deploy**
-1. `registerdata.php` line 2: live DB host, user and password committed in plain
-   text. Rotate the credential and move it to an untracked config file / env var.
-2. `admin/login.php` line 16: credentials hardcoded as `Admin`/`Admin`. Replace
-   with a hashed password (`password_hash`/`password_verify`) stored outside the repo.
-3. `api/settings.php` sends `Access-Control-Allow-Origin: *` — tighten unless
-   cross-origin reads are genuinely needed.
-4. Registration uses `$_REQUEST` (accepts GET) with string interpolation instead of
-   prepared statements — switch to `mysqli` prepared statements and `$_POST` only.
-5. No CSRF token on admin forms; no rate limiting on login.
+### 📞 Footer Phone Numbers — Made Dynamic
+- Added logic to `js/site-settings.js` to also update phone numbers in the **footer** (`about-foo` section).
+- Now, a single change in Admin Panel updates both topbar AND footer phone numbers across all pages.
 
-**Housekeeping**
-6. No `.gitignore` — `.vs/` (Visual Studio cache) is tracked and should be ignored.
-7. No README, no DB schema file. The `members` table structure only exists implicitly
-   in `registerdata.php`; add `schema.sql`.
-8. Duplicated markup across ~15 HTML pages (header/footer/nav). Consider PHP
-   includes or a simple static-site build to stop drift.
-9. Settings defaults are duplicated in `api/settings.php` and `data/settings.json`.
-10. `style.css` is committed alongside `style.scss`/`sass/` with no documented build
-    step — note the Sass command in the README.
+### 💻 XAMPP Setup Guide
+- User installed **XAMPP** for local PHP/MySQL development.
+- Resolved Apache startup error (Port 80 conflict).
+- **Solution:** Changed Apache to run on port **8080**.
+  - `httpd.conf`: Changed `Listen 80` → `Listen 8080`
+  - `httpd.conf`: Changed `ServerName localhost:80` → `ServerName localhost:8080`
+- Local site accessible at: `http://localhost:8080/Anjuman/index.html`
+- Admin Panel accessible at: `http://localhost:8080/Anjuman/admin/login.php`
 
-## 6. Suggested next steps
+---
 
-- [ ] Rotate DB password, remove secrets from source, add `config.sample.php`
-- [ ] Harden admin login (hashed creds + CSRF)
-- [ ] Convert `registerdata.php` to prepared statements, POST-only, with validation
-- [ ] Add `.gitignore` (`.vs/`, `.vscode/`, `config.php`, `*.bak`) and untrack `.vs/`
-- [ ] Add `README.md` + `schema.sql`
-- [ ] Factor shared header/footer into includes
+## 2026-09-04
+
+### 🔗 Header Navigation Links — Updated
+- Updated `header-social text-right` section across all 30 HTML pages.
+- **Format updated to:**
+  `Join Membership | User Login | Admin Login`
+- **Admin Login** links directly to `admin/login.php`.
+
+### 🎨 Main Navigation Bar Styling — Height & Color Update
+- **Target class:** `header .main-header` (`.main-header.hidden-sm-down`)
+- **Height reduced to `90px`** across all pages (updated logo, menu links, and action buttons `line-height` to `90px`).
+- **Background Color:** Kept original white (`#ffffff`).
+- **File modified:** `d:\Anjuman\style.css` (applies to all HTML pages sitewide).
+
+### 📝 Work Log — Created
+- Created this `work.md` file in `d:\Anjuman\` to track all development work date-wise.
+
+---
+
+## 📋 Pending / Next Steps
+
+- [ ] Set up **MySQL database** in phpMyAdmin for the Registration/Membership feature.
+  - Create database: `anjuman_db` (or match name in `registerdata.php`).
+  - Create table: `user_registrtion` with required fields.
+- [ ] Test **Registration Form** end-to-end locally (form submit → DB → Admin members list).
+- [ ] Implement **User Login** functionality (currently placeholder `#`).
+- [ ] Upload updated files to **InfinityFree** hosting via FileZilla.
+
