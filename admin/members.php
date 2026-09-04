@@ -2,19 +2,8 @@
 require_once __DIR__ . '/auth.php';
 check_admin_auth();
 
-$dbConfigs = [
-    ['localhost', 'codecxss_anjuman', 'anjuman!@#2021', 'codecxss_anjuman'],
-    ['localhost', 'root', '', 'anjuman_user'],
-    ['localhost', 'root', '', 'codecxss_anjuman']
-];
-
-$conn = false;
-foreach ($dbConfigs as $cfg) {
-    $conn = @mysqli_connect($cfg[0], $cfg[1], $cfg[2], $cfg[3]);
-    if ($conn) {
-        break;
-    }
-}
+require_once __DIR__ . '/../db.php';
+$conn = get_db_connection();
 
 // Handle CSV Export
 if (isset($_GET['export']) && $_GET['export'] === 'csv' && $conn) {

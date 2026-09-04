@@ -1,17 +1,6 @@
-<?php 
-$dbConfigs = [
-    ['localhost', 'codecxss_anjuman', 'anjuman!@#2021', 'codecxss_anjuman'],
-    ['localhost', 'root', '', 'codecxss_anjuman'],
-    ['localhost', 'root', '', 'anjuman_user']
-];
-
-$link = false;
-foreach ($dbConfigs as $cfg) {
-    $link = @mysqli_connect($cfg[0], $cfg[1], $cfg[2], $cfg[3]);
-    if ($link) {
-        break;
-    }
-}
+<?php
+require_once __DIR__ . '/db.php';
+$link = get_db_connection();
 
 if ($link === false) {
     die("ERROR: Could not connect to MySQL database. Please make sure MySQL is running in XAMPP Control Panel and database 'codecxss_anjuman' or 'anjuman_user' exists.");
