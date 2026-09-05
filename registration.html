@@ -239,13 +239,13 @@
                 </div>
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="form-area">
-                        <form action="registerdata.php" method="POST">
+                        <form action="registerdata.php" method="POST" onsubmit="return validateRegistrationForm()">
                             <fieldset>
                                 <div class="row">
                                     <div class="col-sm-4 col-xs-12 feld">
-                                        <label>Enter your Name</label>
+                                        <label>Enter your Full Name *</label>
                                         <div class=" feld">
-                                            <input type="text" name="username" placeholder="Your Name *" required>
+                                            <input type="text" name="FullName" id="fullname_input" placeholder="Full Name *" required>
                                             <span><i class="fa fa-user"></i></span>
                                         </div>
                                     </div>
@@ -281,11 +281,16 @@
                                             <span><i class="fa fa-user"></i></span>
                                         </div>
                                     </div>
-                                    <div class="col-sm-4 col-xs-12 feld">
-                                        <label>Enter your Age</label>
+                                    <div class="col-sm-2 col-xs-12 feld">
+                                        <label>Date of Birth *</label>
                                         <div class=" feld">
-                                            <input type="text" name="age" placeholder="Enter your Age *" required>
-                                            <span><i class="fa fa-user"></i></span>
+                                            <input type="date" name="dob" id="dob_input" required onchange="calculateAge()">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 col-xs-12 feld">
+                                        <label>Age (Auto)</label>
+                                        <div class=" feld">
+                                            <input type="text" name="age" id="age_input" placeholder="Age" readonly required>
                                         </div>
                                     </div>
                                 </div>
@@ -483,6 +488,27 @@
                                 </div>
                             </fieldset>
 
+                            <!-- Password Fields -->
+                            <fieldset>
+                                <div class="row">
+                                    <div class="col-sm-6 col-xs-12 feld">
+                                        <label>Create Password *</label>
+                                        <div class=" feld">
+                                            <input type="password" name="password" id="pass_input" placeholder="Create Password *" required minlength="6">
+                                            <span><i class="fa fa-lock"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-12 feld">
+                                        <label>Confirm Password *</label>
+                                        <div class=" feld">
+                                            <input type="password" name="confirm_password" id="confirm_pass_input" placeholder="Confirm Password *" required minlength="6" onkeyup="checkPasswordMatch()">
+                                            <span><i class="fa fa-lock"></i></span>
+                                        </div>
+                                        <small id="pass_match_msg" style="font-weight:bold; color:red; display:none; margin-top:5px;"></small>
+                                    </div>
+                                </div>
+                            </fieldset>
+
                             <fieldset>
                                 <div class="feld">
                                     <label>Write message Suggestion or Feedback (Optional)</label>
@@ -494,10 +520,64 @@
 
                             <div class="btn-area text-center">
                                 <!-- <a href="#" class="btn4"><span>Submit</span></a> -->
-                                <button class="btn4" type="submit" name="submit"><span>Submit</span></button>
+                                <button class="btn4" type="submit" name="submit"><span>Submit Registration</span></button>
                             </div>
                         </form>
                     </div>
+
+<script>
+function calculateAge() {
+    var dobVal = document.getElementById('dob_input').value;
+    if (!dobVal) return;
+    var dob = new Date(dobVal);
+    var today = new Date();
+    var age = today.getFullYear() - dob.getFullYear();
+    var m = today.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+        age--;
+    }
+    document.getElementById('age_input').value = (age >= 0 ? age : 0);
+}
+
+function checkPasswordMatch() {
+    var p1 = document.getElementById('pass_input').value;
+    var p2 = document.getElementById('confirm_pass_input').value;
+    var msg = document.getElementById('pass_match_msg');
+    if (p2.length > 0) {
+        if (p1 !== p2) {
+            msg.style.display = 'block';
+            msg.style.color = 'red';
+            msg.innerText = 'Passwords do not match!';
+            return false;
+        } else {
+            msg.style.display = 'block';
+            msg.style.color = 'green';
+            msg.innerText = 'Passwords match!';
+            return true;
+        }
+    } else {
+        msg.style.display = 'none';
+        return false;
+    }
+}
+
+function validateRegistrationForm() {
+    var p1 = document.getElementById('pass_input').value;
+    var p2 = document.getElementById('confirm_pass_input').value;
+    if (p1.length < 6) {
+        alert("Password must be at least 6 characters long.");
+        document.getElementById('pass_input').focus();
+        return false;
+    }
+    if (p1 !== p2) {
+        alert("Passwords do not match. Please re-enter.");
+        document.getElementById('confirm_pass_input').focus();
+        return false;
+    }
+    calculateAge();
+    return true;
+}
+</script>
                 </div>
             </div>
         </div>

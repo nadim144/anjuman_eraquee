@@ -104,6 +104,28 @@ This file tracks all development work done on the **Anjuman Eraquee India** webs
 - Researched real-time OTP SMS delivery architecture and cURL integration patterns for Indian SMS gateways (Fast2SMS, MSG91, Twilio).
 - Summarized pricing structures, free developer trial credits, and step-by-step cURL helper functions for production deployment.
 
+### 🚀 Registration, Password Authentication, Admin CRUD & PDF Certificate Upgrade
+- **Registration Form Improvements (`registration.html`):**
+  - Renamed input label to "Enter your Full Name *" and updated attribute to `name="FullName"` (with backward compatibility for `username`).
+  - Replaced Age text input with a Date of Birth picker (`<input type="date" name="dob">`) and real-time auto-calculated Age field.
+  - Added Password & Confirm Password inputs with real-time match validation and minimum length check.
+- **Backend Registration Processor (`registerdata.php`):**
+  - Added extraction of `FullName`, `dob`, and server-side calculated `age`.
+  - Securely hashed passwords using PHP `password_hash($password, PASSWORD_BCRYPT)`.
+  - Added duplicate check for email and mobile number, redirecting to `user-login.php` on success.
+- **Dual Authentication & Password Reset Flow (`user-login.php`, `user-reset-password.php`):**
+  - Upgraded login page with tabbed interface: Login with Password (via Mobile OR Email) or Login with OTP.
+  - Added "Forgot Password?" request workflow allowing users to notify Admin.
+  - Added `user-reset-password.php` forcing users who log in with a temporary password to create their permanent password.
+- **Official Membership Certificate Download (`download-certificate.php`, `fpdf/`):**
+  - Integrated lightweight, standalone FPDF library.
+  - Built official Certificate of Membership PDF with Anjuman Eraquee branding, member details, welcome declaration, and authorized signatory.
+  - Added "Download Membership Certificate (PDF)" action to `user-dashboard.php`.
+- **Admin Panel Full Member Management (`admin/members.php`, `admin/index.php`):**
+  - Full CRUD: View all member details (modal with 22+ fields), edit member data, and delete member with confirmation.
+  - Temporary Password generation: Admin can issue temporary passwords (`Temp@xxxx`) to members who requested a reset.
+  - Filter by Password Reset Requests and live count badges on Admin dashboard.
+
 ---
 
 ## 📋 Pending / Next Steps
@@ -111,6 +133,10 @@ This file tracks all development work done on the **Anjuman Eraquee India** webs
 - [x] Set up **MySQL database** for Registration/Membership feature (`codecxss_anjuman` / `user_registrtion` table created & verified).
 - [x] Resolve database connection issues across all PHP endpoints (`db.php` implemented).
 - [x] Implement & test **User Login** & OTP verification flow.
+- [x] Upgrade **Registration form** with FullName, DOB, auto-age, and secure password creation.
+- [x] Implement **Password Authentication (Mobile/Email + Password)** with Forgot/Temp password reset flow.
+- [x] Implement **Admin Member Management (CRUD, Edit, Delete, View Details, Issue Temp Password)**.
+- [x] Implement **Downloadable PDF Membership Certificate** with welcoming message.
 - [ ] Connect real SMS Gateway API (Fast2SMS / Twilio) using API Key for real-time mobile SMS delivery.
 - [ ] Upload updated files to **InfinityFree** hosting via FileZilla.
 

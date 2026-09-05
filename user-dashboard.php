@@ -122,6 +122,12 @@ if ($conn && isset($_SESSION['user_id'])) {
 
 <div class="container">
 
+    <?php if (isset($_SESSION['password_reset_success'])): ?>
+        <div class="alert alert-success alert-dismissible fade show font-weight-bold mb-4">
+            <i class="fa fa-check-circle"></i> <?php echo htmlspecialchars($_SESSION['password_reset_success']); unset($_SESSION['password_reset_success']); ?>
+        </div>
+    <?php endif; ?>
+
     <?php if (!$userData): ?>
         <div class="alert alert-warning">
             <i class="fa fa-exclamation-triangle"></i> Member details could not be retrieved. Please try logging in again.
@@ -129,10 +135,15 @@ if ($conn && isset($_SESSION['user_id'])) {
     <?php else: ?>
 
         <!-- Welcome Banner -->
-        <div class="alert alert-success d-flex justify-content-between align-items-center mb-4">
+        <div class="alert alert-success d-flex justify-content-between align-items-center mb-4 flex-wrap" style="gap: 15px;">
             <div>
                 <h4 class="mb-1">Welcome, <strong><?php echo htmlspecialchars($userData['username'] ?? 'Member'); ?></strong> <span class="badge-verified"><i class="fa fa-check"></i> Verified Member</span></h4>
-                <p class="mb-0 text-muted" style="font-size: 13px;">Registered Phone: +91 <?php echo htmlspecialchars($userData['phonenumber'] ?? ''); ?></p>
+                <p class="mb-0 text-muted" style="font-size: 13px;">Registered Phone: +91 <?php echo htmlspecialchars($userData['phonenumber'] ?? ''); ?> | Member ID: #<?php echo str_pad($userData['id'] ?? 1, 5, '0', STR_PAD_LEFT); ?></p>
+            </div>
+            <div>
+                <a href="download-certificate.php" class="btn btn-light font-weight-bold" style="color: #009146; box-shadow: 0 2px 6px rgba(0,0,0,0.1); padding: 8px 16px;">
+                    <i class="fa fa-file-pdf-o text-danger"></i> Download Membership Certificate (PDF)
+                </a>
             </div>
         </div>
 
@@ -159,8 +170,8 @@ if ($conn && isset($_SESSION['user_id'])) {
                             <div class="info-value"><?php echo htmlspecialchars($userData['grandfathername'] ?? 'N/A'); ?></div>
                         </div>
                         <div class="col-6">
-                            <div class="info-label">Gender / Age</div>
-                            <div class="info-value"><?php echo htmlspecialchars($userData['gender'] ?? 'N/A'); ?> (<?php echo htmlspecialchars($userData['age'] ?? 'N/A'); ?> yrs)</div>
+                            <div class="info-label">Date of Birth / Age</div>
+                            <div class="info-value"><?php echo !empty($userData['dob']) ? htmlspecialchars($userData['dob']) : 'N/A'; ?> (<?php echo htmlspecialchars($userData['age'] ?? 'N/A'); ?> yrs)</div>
                         </div>
                         <div class="col-6">
                             <div class="info-label">Marital Status</div>
