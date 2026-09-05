@@ -25,6 +25,7 @@ if (file_exists($settingsFile)) {
 
 // Check database connection & count members
 $totalMembers = 0;
+$totalResetRequests = 0;
 $dbConnected = false;
 $recentMembers = [];
 
@@ -32,18 +33,16 @@ require_once __DIR__ . '/../db.php';
 $conn = get_db_connection();
 if ($conn) {
     $dbConnected = true;
-        $res = @mysqli_query($conn, "SELECT COUNT(*) as cnt FROM user_registrtion");
-        if ($res && $row = mysqli_fetch_assoc($res)) {
-            $totalMembers = $row['cnt'];
+    $res = @mysqli_query($conn, "SELECT COUNT(*) as cnt, SUM(CASE WHEN reset_requested = 1 THEN 1 ELSE 0 END) as reset_cnt FROM user_registrtion");
+    if ($res && $row = mysqli_fetch_assoc($res)) {
+        $totalMembers = intval($row['cnt']);
+        $totalResetRequests = intval($row['reset_cnt']);
+    }
+    $recentRes = @mysqli_query($conn, "SELECT username, email, phonenumber, presentdistrict, created_at FROM user_registrtion ORDER BY id DESC LIMIT 5");
+    if ($recentRes) {
+        while ($m = mysqli_fetch_assoc($recentRes)) {
+            $recentMembers[] = $m;
         }
-        $recentRes = @mysqli_query($conn, "SELECT username, email, phonenumber, presentdistrict, created_at FROM user_registrtion ORDER BY id DESC LIMIT 5");
-        if ($recentRes) {
-            while ($m = mysqli_fetch_assoc($recentRes)) {
-                $recentMembers[] = $m;
-            }
-        }
-        mysqli_close($conn);
-        break;
     }
 }
 ?>
@@ -91,14 +90,20 @@ if ($conn) {
                         <div class="label">Total Registered Members</div>
                         <div class="value" style="color: #009146;"><?php echo number_format($totalMembers); ?></div>
                         <div style="font-size: 13px; color: #64748b; margin-top: 4px;">
-                            <?php echo $dbConnected ? '🟢 Database connected' : '🟡 Database offline/local mode'; ?>
+                            <a href="members.php" style="color: #009146; text-decoration: none; font-weight: 600;">View Directory &rarr;</a>
                         </div>
                     </div>
 
                     <div class="stat-card">
-                        <div class="label">Primary Contact Phone</div>
-                        <div class="value" style="font-size: 20px;"><?php echo htmlspecialchars($settings['topbar_phone_1']); ?></div>
-                        <div style="font-size: 13px; color: #64748b; margin-top: 4px;">Active in header topbar</div>
+                        <div class="label">Password Reset Requests</div>
+                        <div class="value" style="color: <?php echo $totalResetRequests > 0 ? '#b45309' : '#009146'; ?>;"><?php echo number_format($totalResetRequests); ?></div>
+                        <div style="font-size: 13px; color: #64748b; margin-top: 4px;">
+                            <?php if ($totalResetRequests > 0): ?>
+                                <a href="members.php?filter=reset_requested" style="color: #b45309; font-weight: 700;">Action required &rarr;</a>
+                            <?php else: ?>
+                                <span style="color: #10b981;">✓ No pending requests</span>
+                            <?php endif; ?>
+                        </div>
                     </div>
 
                     <div class="stat-card">
