@@ -128,6 +128,30 @@ This file tracks all development work done on the **Anjuman Eraquee India** webs
 
 ---
 
+## 2026-09-13
+
+### 📱 Mobile Hamburger Menu — Added Membership & Login Links & Consistent Headers
+- **Issues Addressed:**
+  1. On mobile viewport (`<= 767px`), the topbar (`.header-social`) is hidden via `hidden-sm-down`. The mobile MeanMenu hamburger drawer did not display "Join Membership", "User Login", and "Admin Login".
+  2. `user-login.php` rendered without the site header and had no mobile hamburger menu.
+  3. `admin/login.php` rendered without the site header and had no mobile hamburger menu.
+  4. On smaller screens, the mobile menu drawer did not scroll and cut off items at the bottom.
+- **Solution:**
+  - Added `max-height: calc(100vh - 70px)` and `overflow-y: auto` to `.mean-container .mean-nav` in `css/meanmenu.min.css` so the mobile menu smoothly scrolls on all mobile screens and all items are visible.
+  - Added the full site header (topbar, desktop menu, and mobile MeanMenu) to `user-login.php`.
+  - Added the full site header (topbar, desktop menu, and mobile MeanMenu) to `admin/login.php`.
+  - Removed the `Membership` accordion dropdown completely as requested, retaining the clean direct top-level menu items: `Join Membership`, `User Login`, and `Admin Login` directly below `Contact Us`.
+  - Standardized the `<nav id="dropdown">` structure across all 17 HTML pages, `user-login.php`, and `admin/login.php` so the mobile hamburger menu behavior and options are 100% consistent across every single page.
+  - Added `.htaccess` to emit `Cache-Control: no-cache, no-store, must-revalidate` and `Pragma: no-cache` so browsers (especially mobile/DevTools) always serve fresh content and do not retain stale cached menus.
+- **Files updated:**
+  - `user-login.php`, `admin/login.php`
+  - `css/meanmenu.min.css`
+  - `index.html`, `about.html`, `registration.html`, `contact.html`, `blocklevel.html`, `blog-single.html`, `blog.html`, `causes-list.html`, `causes-single.html`, `coreexecutive.html`, `districtlevel.html`, `event.html`, `gallery-col-2.html`, `gallery-col-3.html`, `gallery-col-4.html`, `matrimonialregistration.html`, `statelevel.html`
+  - `js/site-settings.js`
+  - `.htaccess`
+
+---
+
 ## 📋 Pending / Next Steps
 
 - [x] Set up **MySQL database** for Registration/Membership feature (`codecxss_anjuman` / `user_registrtion` table created & verified).
@@ -137,6 +161,8 @@ This file tracks all development work done on the **Anjuman Eraquee India** webs
 - [x] Implement **Password Authentication (Mobile/Email + Password)** with Forgot/Temp password reset flow.
 - [x] Implement **Admin Member Management (CRUD, Edit, Delete, View Details, Issue Temp Password)**.
 - [x] Implement **Downloadable PDF Membership Certificate** with welcoming message.
+- [x] Standardize **Mobile Hamburger Menu** consistently across all site pages without redundant Membership submenus.
 - [ ] Connect real SMS Gateway API (Fast2SMS / Twilio) using API Key for real-time mobile SMS delivery.
 - [ ] Upload updated files to **InfinityFree** hosting via FileZilla.
+
 

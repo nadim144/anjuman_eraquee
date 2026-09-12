@@ -43,14 +43,17 @@
         }
 
         // 3. Update Header Login Links
-        var loginLinks = document.querySelectorAll('.header-social a, .mobile-menu a');
+        var loginLinks = document.querySelectorAll('.header-social a, .mobile-menu a, .mean-nav a');
         loginLinks.forEach(function (link) {
             var text = link.textContent.trim();
-            if (text === 'Login' || text === 'Login |' || text === 'Admin Login') {
+            if (text === 'Login' || text === 'Login |' || text === 'Admin Login' || text === 'ADMIN LOGIN') {
                 link.setAttribute('href', 'admin/login.php');
             }
-            if (text === 'User Login' || text === 'User Login |') {
+            if (text === 'User Login' || text === 'User Login |' || text === 'USER LOGIN') {
                 link.setAttribute('href', 'user-login.php');
+            }
+            if (text === 'Join Membership' || text === 'Join Membership |' || text === 'JOIN MEMBERSHIP') {
+                link.setAttribute('href', 'registration.html');
             }
         });
 
