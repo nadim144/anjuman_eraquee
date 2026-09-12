@@ -132,7 +132,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Member Login | Anjuman Eraquee INDIA</title>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/meanmenu.min.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/responsive.css">
     <style>
         body {
             background-color: #f4f6f9;
@@ -221,6 +223,144 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
+    <!--Header area start here-->
+    <header>
+        <div class="topbar hidden-sm-down">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-md-9 col-sm-12 col-xs-12">
+                        <div class="header-event">
+                            <ul class="list-inline count-list">
+                                <li><a href="tel:9006297386"><i class="fa fa-mobile"></i> +91 9006297386</a></li>
+                                <li><a href="tel:9472502044"><i class="fa fa-mobile"></i> +91 9472502044</a></li>
+                                <li><a href="tel:9738455404"><i class="fa fa-mobile"></i> +91 9738455404</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12">
+                        <div class="header-social text-right">
+                            <ul class="list-inline">
+                                <li><a href="registration.html">Join Membership |</a></li>
+                                <li><a href="user-login.php">User Login |</a></li>
+                                <li><a href="admin/login.php">Admin Login</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-header hidden-sm-down" id="sticky">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                        <div class="logo-area">
+                            <a href="index.html"><img src="images/logo/logo.png" alt="" /></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+                        <div class="menu-area">
+                            <nav>
+                                <ul class="list-inline">
+                                    <li><a href="index.html">Home</a></li>
+                                    <li><a href="about.html">About Us</a></li>
+                                    <li class="drop-menu">
+                                        <a href="javascript:void(0)">Personalities</a>
+                                        <ul class="down-menu">
+                                            <li><a href="index.html">Freedom Fighter</a></li>
+                                            <li><a href="index.html">Bureaucrat</a></li>
+                                            <li><a href="index.html">Politicians</a></li>
+                                            <li><a href="index.html">Doctors</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="drop-menu">
+                                        <a href="javascript:void(0)">Teams</a>
+                                        <ul class="down-menu">
+                                            <li><a href="index.html">Core Executive Members</a></li>
+                                            <li><a href="index.html">State Level</a></li>
+                                            <li><a href="districtlevel.html">District Level</a></li>
+                                            <li><a href="index.html">Block Level</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="about.html">Mission</a></li>
+                                    <li class="drop-menu">
+                                        <a href="javascript:void(0)">Gallery</a>
+                                        <ul class="down-menu">
+                                            <li><a href="gallery-col-4.html">Photos</a></li>
+                                            <li><a href="index.html">Videos</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="drop-menu">
+                                        <a href="javascript:void(0)">Matrimonial</a>
+                                        <ul class="down-menu">
+                                            <li><a href="matrimonialregistration.html">Registration</a></li>
+                                            <li><a href="matrimonialregistration.html">Dulha</a></li>
+                                            <li><a href="matrimonialregistration.html">Dulhan</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="contact.html">Contact Us</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mobile-menu-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mobile-menu">
+                            <nav id="dropdown">
+                                <ul class="list-inline">
+                                    <li><a href="index.html">Home</a></li>
+                                    <li><a href="about.html">About Us</a></li>
+                                    <li class="drop-menu">
+                                        <a href="javascript:void(0)">Personalities</a>
+                                        <ul class="down-menu">
+                                            <li><a href="index.html">Freedom Fighter</a></li>
+                                            <li><a href="index.html">Bureaucrat</a></li>
+                                            <li><a href="index.html">Politicians</a></li>
+                                            <li><a href="index.html">Doctors</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="drop-menu">
+                                        <a href="javascript:void(0)">Teams</a>
+                                        <ul class="down-menu">
+                                            <li><a href="coreexecutive.html">Core Executive Members</a></li>
+                                            <li><a href="statelevel.html">State Level</a></li>
+                                            <li><a href="districtlevel.html">District Level</a></li>
+                                            <li><a href="blocklevel.html">Block Level</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="about.html">Mission</a></li>
+                                    <li class="drop-menu">
+                                        <a href="javascript:void(0)">Gallery</a>
+                                        <ul class="down-menu">
+                                            <li><a href="gallery-col-4.html">Photos</a></li>
+                                            <li><a href="index.html">Videos</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="drop-menu">
+                                        <a href="javascript:void(0)">Matrimonial</a>
+                                        <ul class="down-menu">
+                                            <li><a href="matrimonialregistration.html">Registration</a></li>
+                                            <li><a href="matrimonialregistration.html">Dulha</a></li>
+                                            <li><a href="matrimonialregistration.html">Dulhan</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="contact.html">Contact Us</a></li>
+                                    <li><a href="registration.html">Join Membership</a></li>
+                                    <li><a href="user-login.php">User Login</a></li>
+                                    <li><a href="admin/login.php">Admin Login</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!--Header area end here-->
 
 <div class="container">
     <div class="login-container">
@@ -356,6 +496,16 @@ function toggleForgotBox() {
     box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none';
 }
 </script>
-
+<script src="js/vendor/jquery-1.12.0.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.meanmenu.js"></script>
+<script>
+    jQuery(document).ready(function($) {
+        if ($('nav#dropdown').length) {
+            $('nav#dropdown').meanmenu();
+        }
+    });
+</script>
+<script src="js/site-settings.js"></script>
 </body>
 </html>
