@@ -91,13 +91,36 @@ if (!function_exists('run_db_migrations')) {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
         @mysqli_query($conn, $createTableSql);
 
-        @mysqli_query($conn, "ALTER TABLE user_registrtion ADD COLUMN IF NOT EXISTS dob DATE NULL AFTER age");
-        @mysqli_query($conn, "ALTER TABLE user_registrtion ADD COLUMN IF NOT EXISTS password VARCHAR(255) NULL");
-        @mysqli_query($conn, "ALTER TABLE user_registrtion ADD COLUMN IF NOT EXISTS otp_code VARCHAR(10) NULL");
-        @mysqli_query($conn, "ALTER TABLE user_registrtion ADD COLUMN IF NOT EXISTS otp_expiry DATETIME NULL");
-        @mysqli_query($conn, "ALTER TABLE user_registrtion ADD COLUMN IF NOT EXISTS is_temp_password TINYINT(1) DEFAULT 0");
-        @mysqli_query($conn, "ALTER TABLE user_registrtion ADD COLUMN IF NOT EXISTS reset_requested TINYINT(1) DEFAULT 0");
-        @mysqli_query($conn, "ALTER TABLE user_registrtion ADD COLUMN IF NOT EXISTS created_at DATETIME DEFAULT CURRENT_TIMESTAMP");
+        // Fetch currently existing columns to safely alter without version incompatibility
+        $existingCols = [];
+        $colRes = @mysqli_query($conn, "SHOW COLUMNS FROM `user_registrtion`");
+        if ($colRes) {
+            while ($row = mysqli_fetch_assoc($colRes)) {
+                $existingCols[strtolower($row['Field'])] = true;
+            }
+        }
+
+        $neededCols = [
+            'dob' => "ALTER TABLE `user_registrtion` ADD COLUMN `dob` DATE NULL AFTER `age`",
+            'password' => "ALTER TABLE `user_registrtion` ADD COLUMN `password` VARCHAR(255) NULL",
+            'otp_code' => "ALTER TABLE `user_registrtion` ADD COLUMN `otp_code` VARCHAR(10) NULL",
+            'otp_expiry' => "ALTER TABLE `user_registrtion` ADD COLUMN `otp_expiry` DATETIME NULL",
+            'is_temp_password' => "ALTER TABLE `user_registrtion` ADD COLUMN `is_temp_password` TINYINT(1) DEFAULT 0",
+            'reset_requested' => "ALTER TABLE `user_registrtion` ADD COLUMN `reset_requested` TINYINT(1) DEFAULT 0",
+            'profile_picture' => "ALTER TABLE `user_registrtion` ADD COLUMN `profile_picture` VARCHAR(255) NULL AFTER `username`",
+            'aadhaar_number' => "ALTER TABLE `user_registrtion` ADD COLUMN `aadhaar_number` VARCHAR(20) NULL AFTER `dob`",
+            'additional_mobile' => "ALTER TABLE `user_registrtion` ADD COLUMN `additional_mobile` VARCHAR(20) NULL AFTER `phonenumber`",
+            'certificate_path' => "ALTER TABLE `user_registrtion` ADD COLUMN `certificate_path` VARCHAR(255) NULL",
+            'certificate_generated_at' => "ALTER TABLE `user_registrtion` ADD COLUMN `certificate_generated_at` DATETIME NULL",
+            'registration_step' => "ALTER TABLE `user_registrtion` ADD COLUMN `registration_step` TINYINT(1) DEFAULT 1",
+            'is_profile_completed' => "ALTER TABLE `user_registrtion` ADD COLUMN `is_profile_completed` TINYINT(1) DEFAULT 0"
+        ];
+
+        foreach ($neededCols as $colName => $alterSql) {
+            if (!isset($existingCols[$colName])) {
+                @mysqli_query($conn, $alterSql);
+            }
+        }
 
         $migrated = true;
     }
