@@ -46,7 +46,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 40px 15px;
+            padding: 50px 15px;
+            clear: both;
+        }
+        @media (max-width: 767px) {
+            .admin-login-wrapper {
+                padding: 40px 15px 60px 15px;
+                margin-top: 25px;
+            }
         }
         .login-card {
             width: 100%;
@@ -56,6 +63,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             border-top: 4px solid #009146;
             padding: 35px 30px;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .login-header .login-logo {
+            max-height: 52px;
+            height: auto;
+            margin-bottom: 12px;
+        }
+        .login-header h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+            color: #009146;
+        }
+        .login-header p {
+            color: #64748b;
+            font-size: 13px;
+            margin: 0;
         }
     </style>
 </head>
@@ -202,7 +229,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="admin-login-wrapper">
         <div class="login-card">
             <div class="login-header">
-                <h2 style="color: #009146;">Anjuman <span style="color: #38bdf8;">Eraquee</span></h2>
+                <a href="../index.html" style="display: inline-block;">
+                    <img src="../images/logo/logo.png" alt="Anjuman Eraquee INDIA" class="login-logo">
+                </a>
+                <h2>Anjuman <span style="color: #38bdf8;">Eraquee</span></h2>
                 <p>Super Admin Panel Login</p>
             </div>
 

@@ -140,85 +140,155 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: #f4f6f9;
             font-family: 'Droid Sans', sans-serif;
         }
-        .login-container {
+        .user-login-wrapper {
+            min-height: calc(100vh - 180px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 15px;
+            clear: both;
+        }
+        @media (max-width: 767px) {
+            .user-login-wrapper {
+                padding: 40px 15px 60px 15px;
+                margin-top: 25px;
+            }
+        }
+        .login-card {
+            width: 100%;
             max-width: 440px;
-            margin: 60px auto;
             background: #ffffff;
-            padding: 35px 30px;
             border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             border-top: 4px solid #009146;
+            padding: 35px 30px;
         }
         .login-header {
             text-align: center;
-            margin-bottom: 22px;
+            margin-bottom: 24px;
         }
-        .login-header img {
-            max-height: 65px;
+        .login-header .login-logo {
+            max-height: 52px;
+            height: auto;
             margin-bottom: 12px;
         }
-        .login-header h3 {
+        .login-header h2 {
             font-size: 22px;
             font-weight: 700;
+            margin: 0 0 4px 0;
             color: #009146;
-            margin: 0;
         }
         .login-header p {
-            color: #666;
+            color: #64748b;
             font-size: 13px;
-            margin-top: 5px;
+            margin: 0;
+        }
+        .nav-pills {
+            display: flex;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 6px;
+            margin-bottom: 22px;
+            border: 1px solid #e2e8f0;
+        }
+        .nav-pills .nav-item {
+            flex: 1;
+            text-align: center;
         }
         .nav-pills .nav-link {
-            border-radius: 4px;
+            display: block;
+            border-radius: 5px;
             font-weight: 600;
-            font-size: 14px;
-            color: #555;
-            background: #f1f5f9;
-            margin: 0 3px;
-            text-align: center;
-            padding: 8px 12px;
+            font-size: 13px;
+            color: #64748b;
+            padding: 8px 10px;
+            text-decoration: none;
+            transition: all 0.2s ease;
         }
         .nav-pills .nav-link.active {
             background-color: #009146;
-            color: #fff;
+            color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 145, 70, 0.2);
         }
-        .btn-custom {
-            background-color: #009146;
-            color: #fff;
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            font-size: 13px;
             font-weight: 600;
-            padding: 11px;
-            border-radius: 4px;
-            width: 100%;
-            border: none;
-            transition: all 0.3s;
+            color: #334155;
+            margin-bottom: 6px;
+            display: block;
         }
-        .btn-custom:hover {
-            background-color: #007638;
-            color: #fff;
+        .input-group-prepend .input-group-text {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+            color: #64748b;
+            padding: 10px 14px;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+        }
+        .form-control {
+            height: 44px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 10px 14px;
+            font-size: 14px;
+            color: #1e293b;
+            box-shadow: none;
         }
         .form-control:focus {
             border-color: #009146;
-            box-shadow: 0 0 0 0.2rem rgba(0, 145, 70, 0.25);
+            outline: 0;
+            box-shadow: 0 0 0 3px rgba(0, 145, 70, 0.15);
+        }
+        .btn-custom {
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #009146;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            margin-top: 6px;
+        }
+        .btn-custom:hover {
+            background-color: #007638;
+            color: #ffffff;
         }
         .footer-link {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 24px;
             font-size: 13px;
+            color: #475569;
         }
-        .footer-link a {
+        .footer-link a.join-link {
             color: #009146;
             font-weight: 600;
             text-decoration: none;
         }
-        .footer-link a:hover {
+        .footer-link a.join-link:hover {
             text-decoration: underline;
+        }
+        .footer-link a.back-link {
+            color: #64748b;
+            font-size: 13px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .footer-link a.back-link:hover {
+            color: #1e293b;
         }
         .forgot-box {
             background: #f8fafc;
             border: 1px dashed #cbd5e1;
-            padding: 15px;
+            padding: 16px;
             border-radius: 6px;
-            margin-top: 15px;
+            margin-top: 16px;
         }
     </style>
 </head>
@@ -362,119 +432,106 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </header>
     <!--Header area end here-->
 
-<div class="container">
-    <div class="login-container">
-        <div class="login-header">
-            <a href="index.html"><img src="images/logo.png" alt="Anjuman Logo" onerror="this.style.display='none'"></a>
-            <h3>Member Login</h3>
-            <p>Access your Anjuman Eraquee Membership Portal</p>
-        </div>
-
-        <?php if ($error): ?>
-            <div class="alert alert-danger font-weight-bold" style="font-size: 13px;">
-                <i class="fa fa-exclamation-circle"></i> <?php echo htmlspecialchars($error); ?>
-            </div>
-        <?php endif; ?>
-
-        <?php if ($success): ?>
-            <div class="alert alert-success font-weight-bold" style="font-size: 13px;">
-                <i class="fa fa-check-circle"></i> <?php echo htmlspecialchars($success); ?>
-            </div>
-        <?php endif; ?>
-
-        <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link <?php echo $activeTab === 'password' ? 'active' : ''; ?>" id="tab-pass-btn" href="javascript:void(0)" onclick="switchTab('password')">
-                    <i class="fa fa-key"></i> Password Login
+    <div class="user-login-wrapper">
+        <div class="login-card">
+            <div class="login-header">
+                <a href="index.html" style="display: inline-block;">
+                    <img src="images/logo/logo.png" alt="Anjuman Eraquee INDIA" class="login-logo">
                 </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <?php echo $activeTab === 'otp' ? 'active' : ''; ?>" id="tab-otp-btn" href="javascript:void(0)" onclick="switchTab('otp')">
-                    <i class="fa fa-mobile"></i> OTP Login
-                </a>
-            </li>
-        </ul>
+                <h2>Member Login</h2>
+                <p>Access your Anjuman Eraquee Membership Portal</p>
+            </div>
 
-        <!-- Tab 1: Password Login -->
-        <div id="pane-pass" style="<?php echo $activeTab === 'password' ? 'display:block;' : 'display:none;'; ?>">
-            <form action="user-login.php" method="POST">
-                <input type="hidden" name="action" value="login_password">
-
-                <div class="form-group">
-                    <label for="login_id" class="font-weight-bold" style="font-size: 13px;">Mobile Number or Email Address</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fa fa-user"></i></span>
-                        </div>
-                        <input type="text" name="login_id" id="login_id" class="form-control" placeholder="Mobile number or email" required autofocus>
-                    </div>
+            <?php if ($error): ?>
+                <div class="alert alert-danger font-weight-bold" style="font-size: 13px;">
+                    <i class="fa fa-exclamation-circle"></i> <?php echo htmlspecialchars($error); ?>
                 </div>
+            <?php endif; ?>
 
-                <div class="form-group">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <label for="password" class="font-weight-bold" style="font-size: 13px; margin:0;">Password</label>
-                        <a href="javascript:void(0)" onclick="toggleForgotBox()" style="font-size: 12px; color: #009146;">Forgot Password?</a>
+            <?php if ($success): ?>
+                <div class="alert alert-success font-weight-bold" style="font-size: 13px;">
+                    <i class="fa fa-check-circle"></i> <?php echo htmlspecialchars($success); ?>
+                </div>
+            <?php endif; ?>
+
+            <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link <?php echo $activeTab === 'password' ? 'active' : ''; ?>" id="tab-pass-btn" href="javascript:void(0)" onclick="switchTab('password')">
+                        <i class="fa fa-key"></i> Password Login
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php echo $activeTab === 'otp' ? 'active' : ''; ?>" id="tab-otp-btn" href="javascript:void(0)" onclick="switchTab('otp')">
+                        <i class="fa fa-mobile"></i> OTP Login
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Tab 1: Password Login -->
+            <div id="pane-pass" style="<?php echo $activeTab === 'password' ? 'display:block;' : 'display:none;'; ?>">
+                <form action="user-login.php" method="POST">
+                    <input type="hidden" name="action" value="login_password">
+
+                    <div class="form-group">
+                        <label for="login_id">Mobile Number or Email Address</label>
+                        <input type="text" name="login_id" id="login_id" class="form-control" placeholder="Enter mobile number or email" required autofocus>
                     </div>
-                    <div class="input-group mt-1">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fa fa-lock"></i></span>
+
+                    <div class="form-group">
+                        <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 6px;">
+                            <label for="password" style="margin: 0;">Password</label>
+                            <a href="javascript:void(0)" onclick="toggleForgotBox()" style="font-size: 12px; color: #009146; font-weight: 600;">Forgot Password?</a>
                         </div>
                         <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
                     </div>
-                </div>
 
-                <button type="submit" class="btn btn-custom mt-2">
-                    <i class="fa fa-sign-in"></i> Log In
-                </button>
-            </form>
-
-            <!-- Collapsible Forgot Password Request -->
-            <div id="forgot_box" class="forgot-box" style="display: none;">
-                <h6 style="color: #009146; font-weight: 700; font-size: 13px; margin-bottom: 6px;">
-                    <i class="fa fa-question-circle"></i> Request Temporary Password
-                </h6>
-                <p style="font-size: 12px; color: #64748b; margin-bottom: 10px;">
-                    Submit your Mobile or Email below. Admin will receive your request and issue a temporary password for you.
-                </p>
-                <form action="user-login.php" method="POST">
-                    <input type="hidden" name="action" value="request_reset">
-                    <div class="input-group input-group-sm mb-2">
-                        <input type="text" name="reset_id" class="form-control" placeholder="Registered Mobile or Email" required>
-                        <div class="input-group-append">
-                            <button class="btn btn-success" type="submit" style="background:#009146; font-weight:600;">Request</button>
-                        </div>
-                    </div>
+                    <button type="submit" class="btn-custom">
+                        Log In
+                    </button>
                 </form>
-            </div>
-        </div>
 
-        <!-- Tab 2: OTP Login -->
-        <div id="pane-otp" style="<?php echo $activeTab === 'otp' ? 'display:block;' : 'display:none;'; ?>">
-            <form action="user-login.php" method="POST">
-                <input type="hidden" name="action" value="send_otp">
-
-                <div class="form-group">
-                    <label for="phonenumber" class="font-weight-bold" style="font-size: 13px;">Registered Mobile Number</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fa fa-phone"></i></span>
+                <!-- Collapsible Forgot Password Request -->
+                <div id="forgot_box" class="forgot-box" style="display: none;">
+                    <h6 style="color: #009146; font-weight: 700; font-size: 13px; margin-bottom: 6px;">
+                        <i class="fa fa-question-circle"></i> Request Temporary Password
+                    </h6>
+                    <p style="font-size: 12px; color: #64748b; margin-bottom: 10px;">
+                        Submit your Mobile or Email below. Admin will receive your request and issue a temporary password for you.
+                    </p>
+                    <form action="user-login.php" method="POST">
+                        <input type="hidden" name="action" value="request_reset">
+                        <div class="input-group input-group-sm mb-2">
+                            <input type="text" name="reset_id" class="form-control" placeholder="Registered Mobile or Email" required>
+                            <div class="input-group-append">
+                                <button class="btn btn-success" type="submit" style="background:#009146; font-weight:600; border:none; padding: 0 14px;">Request</button>
+                            </div>
                         </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tab 2: OTP Login -->
+            <div id="pane-otp" style="<?php echo $activeTab === 'otp' ? 'display:block;' : 'display:none;'; ?>">
+                <form action="user-login.php" method="POST">
+                    <input type="hidden" name="action" value="send_otp">
+
+                    <div class="form-group">
+                        <label for="phonenumber">Registered Mobile Number</label>
                         <input type="text" name="phonenumber" id="phonenumber" class="form-control" placeholder="Enter 10-digit mobile number">
                     </div>
-                </div>
 
-                <button type="submit" class="btn btn-custom mt-2">
-                    <i class="fa fa-paper-plane"></i> Send OTP
-                </button>
-            </form>
-        </div>
+                    <button type="submit" class="btn-custom">
+                        Send OTP
+                    </button>
+                </form>
+            </div>
 
-        <div class="footer-link">
-            Not registered yet? <a href="registration.html">Join Membership</a><br>
-            <a href="index.html" class="text-muted mt-2 d-inline-block"><i class="fa fa-arrow-left"></i> Back to Homepage</a>
+            <div class="footer-link">
+                Not registered yet? <a href="registration.html" class="join-link">Join Membership</a><br>
+                <a href="index.html" class="back-link">&larr; Back to Main Website</a>
+            </div>
         </div>
     </div>
-</div>
 
 <script>
 function switchTab(tab) {
