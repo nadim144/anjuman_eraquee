@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 if (!isset($_SESSION['user_logged_in']) || $_SESSION['user_logged_in'] !== true) {
     header('Location: user-login.php');
@@ -61,6 +63,99 @@ class MembershipCertificate extends FPDF {
         $this->Line(197, 284, 187, 284);
         $this->Line(197, 284, 197, 274);
     }
+
+    function Circle($x, $y, $r, $style='D') {
+        $lx = 4/3 * (M_SQRT2 - 1) * $r;
+        $ly = 4/3 * (M_SQRT2 - 1) * $r;
+        $k = $this->k;
+        $h = $this->h;
+        $this->_out(sprintf('%.2F %.2F m %.2F %.2F %.2F %.2F %.2F %.2F c',
+            ($x+$r)*$k, ($h-$y)*$k,
+            ($x+$r)*$k, ($h-($y-$ly))*$k,
+            ($x+$lx)*$k, ($h-($y-$r))*$k,
+            $x*$k, ($h-($y-$r))*$k));
+        $this->_out(sprintf('%.2F %.2F %.2F %.2F %.2F %.2F c',
+            ($x-$lx)*$k, ($h-($y-$r))*$k,
+            ($x-$r)*$k, ($h-($y-$ly))*$k,
+            ($x-$r)*$k, ($h-$y)*$k));
+        $this->_out(sprintf('%.2F %.2F %.2F %.2F %.2F %.2F c',
+            ($x-$r)*$k, ($h-($y+$ly))*$k,
+            ($x-$lx)*$k, ($h-($y+$r))*$k,
+            $x*$k, ($h-($y+$r))*$k));
+        $this->_out(sprintf('%.2F %.2F %.2F %.2F %.2F %.2F c %s',
+            ($x+$lx)*$k, ($h-($y+$r))*$k,
+            ($x+$r)*$k, ($h-($y+$ly))*$k,
+            ($x+$r)*$k, ($h-$y)*$k,
+            $style=='F'?'f':'S'));
+    }
+
+    function ClippedCircleImage($file, $x, $y, $size) {
+        $r = $size / 2;
+        $xc = $x + $r;
+        $yc = $y + $r;
+        
+        $imgW = $size;
+        $imgH = $size;
+        $imgX = $x;
+        $imgY = $y;
+        
+        $info = @getimagesize($file);
+        if ($info && $info[0] > 0 && $info[1] > 0) {
+            $ow = $info[0];
+            $oh = $info[1];
+            if ($oh > $ow) {
+                // Portrait
+                $imgW = $size;
+                $imgH = $size * ($oh / $ow);
+                $imgX = $x;
+                $imgY = $y - ($imgH - $size) / 2;
+            } else {
+                // Landscape
+                $imgH = $size;
+                $imgW = $size * ($ow / $oh);
+                $imgY = $y;
+                $imgX = $x - ($imgW - $size) / 2;
+            }
+        }
+
+        $this->_out('q');
+        $lx = 4/3 * (M_SQRT2 - 1) * $r;
+        $ly = 4/3 * (M_SQRT2 - 1) * $r;
+        $k = $this->k;
+        $height = $this->h;
+        
+        $this->_out(sprintf('%.2F %.2F m', ($xc+$r)*$k, ($height-$yc)*$k));
+        $this->_out(sprintf('%.2F %.2F %.2F %.2F %.2F %.2F c',
+            ($xc+$r)*$k, ($height-($yc-$ly))*$k,
+            ($xc+$lx)*$k, ($height-($yc-$r))*$k,
+            $xc*$k, ($height-($yc-$r))*$k));
+        $this->_out(sprintf('%.2F %.2F %.2F %.2F %.2F %.2F c',
+            ($xc-$lx)*$k, ($height-($yc-$r))*$k,
+            ($xc-$r)*$k, ($height-($yc-$ly))*$k,
+            ($xc-$r)*$k, ($height-$yc)*$k));
+        $this->_out(sprintf('%.2F %.2F %.2F %.2F %.2F %.2F c',
+            ($xc-$r)*$k, ($height-($yc+$ly))*$k,
+            ($xc-$lx)*$k, ($height-($yc+$r))*$k,
+            $xc*$k, ($height-($yc+$r))*$k));
+        $this->_out(sprintf('%.2F %.2F %.2F %.2F %.2F %.2F c',
+            ($xc+$lx)*$k, ($height-($yc+$r))*$k,
+            ($xc+$r)*$k, ($height-($yc+$ly))*$k,
+            ($xc+$r)*$k, ($height-$yc)*$k));
+        $this->_out('W n');
+        
+        $this->Image($file, $imgX, $imgY, $imgW, $imgH);
+        $this->_out('Q');
+        
+        // Circular decorative green border
+        $this->SetDrawColor(0, 145, 70);
+        $this->SetLineWidth(0.7);
+        $this->Circle($xc, $yc, $r, 'D');
+
+        // Circular inner gold border
+        $this->SetDrawColor(217, 119, 6);
+        $this->SetLineWidth(0.3);
+        $this->Circle($xc, $yc, $r + 0.8, 'D');
+    }
 }
 
 $pdf = new MembershipCertificate('P', 'mm', 'A4');
@@ -69,7 +164,7 @@ $pdf->SetAutoPageBreak(false);
 $pdf->AddPage();
 $pdf->drawBorders();
 
-// Logo
+// Top Organization Logo
 $logoPath = __DIR__ . '/images/logo/logo.png';
 if (file_exists($logoPath)) {
     $pdf->Image($logoPath, 92, 16, 26);
@@ -96,18 +191,38 @@ $pdf->SetY($pdf->GetY() + 3);
 $pdf->SetDrawColor(217, 119, 6);
 $pdf->SetLineWidth(0.8);
 $pdf->Line(35, $pdf->GetY(), 175, $pdf->GetY());
-$pdf->Ln(5);
+$pdf->Ln(4);
 
 // Certificate Intro Text
 $pdf->SetFont('Arial', '', 11);
 $pdf->SetTextColor(70, 70, 70);
 $pdf->Cell(0, 6, 'This is to certify that', 0, 1, 'C');
 
+// Member Circular Profile Picture just below "This is to certify that"
+if (!empty($user['profile_picture'])) {
+    $photoPath = __DIR__ . '/' . $user['profile_picture'];
+    if (file_exists($photoPath)) {
+        try {
+            $photoSize = 26; // diameter in mm
+            $photoX = (210 - $photoSize) / 2; // centered horizontally
+            $photoY = $pdf->GetY() + 2;
+            $pdf->ClippedCircleImage($photoPath, $photoX, $photoY, $photoSize);
+            $pdf->SetY($photoY + $photoSize + 3);
+        } catch (Exception $e) {
+            $pdf->Ln(2);
+        }
+    } else {
+        $pdf->Ln(2);
+    }
+} else {
+    $pdf->Ln(2);
+}
+
 // Member Full Name
 $fullName = strtoupper(utf8_decode($user['username'] ?? 'MEMBER'));
-$pdf->SetFont('Arial', 'B', 17);
+$pdf->SetFont('Arial', 'B', 16);
 $pdf->SetTextColor(0, 100, 50);
-$pdf->Cell(0, 9, $fullName, 0, 1, 'C');
+$pdf->Cell(0, 8, $fullName, 0, 1, 'C');
 
 // Subtext
 $pdf->SetFont('Arial', '', 10);
@@ -126,15 +241,22 @@ $pdf->SetFillColor(240, 248, 243);
 $pdf->SetDrawColor(180, 215, 195);
 $pdf->SetLineWidth(0.3);
 
+$aadhaarFormatted = '-';
+if (!empty($user['aadhaar_number'])) {
+    $digits = preg_replace('/\D/', '', $user['aadhaar_number']);
+    $aadhaarFormatted = trim(chunk_split($digits, 4, ' '));
+}
+
 $details = [
     ['Member ID', $regId, 'Registered Date', !empty($user['created_at']) ? substr($user['created_at'], 0, 10) : date('Y-m-d')],
     ['Full Name', utf8_decode($user['username'] ?? '-'), 'Father\'s Name', utf8_decode($user['fathername'] ?? '-')],
     ['Mother\'s Name', utf8_decode($user['mothername'] ?? '-'), 'Grandfather\'s Name', utf8_decode($user['grandfathername'] ?? '-')],
-    ['Date of Birth', !empty($user['dob']) ? $user['dob'] : '-', 'Age / Gender', ($user['age'] ?? '-') . ' yrs / ' . ($user['gender'] ?? '-')],
-    ['Marital Status', utf8_decode($user['maritalstatus'] ?? '-'), 'Native Place', utf8_decode($user['nativeplace'] ?? '-')],
-    ['Phone Number', $user['phonenumber'] ?? '-', 'WhatsApp Number', $user['whatsappnumber'] ?? '-'],
-    ['Email Address', utf8_decode($user['email'] ?? '-'), 'District / State', utf8_decode(($user['presentdistrict'] ?? '-') . ', ' . ($user['presentstate'] ?? '-'))],
-    ['Qualification', utf8_decode($user['qulification'] ?? '-'), 'Occupation', utf8_decode($user['occupation'] ?? '-')],
+    ['Date of Birth', !empty($user['dob']) ? $user['dob'] : '-', 'Gender', ucfirst($user['gender'] ?? '-')],
+    ['Aadhaar Number', $aadhaarFormatted, 'Marital Status', ucfirst(utf8_decode($user['maritalstatus'] ?? '-'))],
+    ['Phone Number', $user['phonenumber'] ?? '-', 'Alternate Mobile', !empty($user['additional_mobile']) ? $user['additional_mobile'] : '-'],
+    ['WhatsApp Number', $user['whatsappnumber'] ?? '-', 'District / State', utf8_decode(($user['presentdistrict'] ?? '-') . ', ' . ($user['presentstate'] ?? '-'))],
+    ['Email Address', utf8_decode($user['email'] ?? '-'), 'Occupation', utf8_decode($user['occupation'] ?? '-')],
+    ['Qualification', utf8_decode($user['qulification'] ?? '-'), 'Qualification Details', utf8_decode($user['qualificationdetails'] ?? '-')],
 ];
 
 foreach ($details as $row) {
@@ -212,7 +334,27 @@ $pdf->SetFont('Arial', '', 7.5);
 $pdf->SetTextColor(120, 120, 120);
 $pdf->Cell(0, 4, 'Helpline: +91 9006297386 | Official Portal: www.anjumaneraquee.org | Registered Member Certificate', 0, 1, 'C');
 
+// Save certificate copy to server disk and update database record
+$certDir = __DIR__ . '/uploads/certificates/';
+if (!is_dir($certDir)) {
+    @mkdir($certDir, 0777, true);
+}
+$savedCertRelPath = 'uploads/certificates/certificate_member_' . $user['id'] . '.pdf';
+$savedCertFullPath = __DIR__ . '/' . $savedCertRelPath;
+$pdf->Output('F', $savedCertFullPath);
+
+// Update database record with generated certificate path and timestamp
+$now = date('Y-m-d H:i:s');
+$updateCertSql = "UPDATE user_registrtion SET 
+    certificate_path = '" . mysqli_real_escape_string($conn, $savedCertRelPath) . "', 
+    certificate_generated_at = '$now' 
+    WHERE id = " . intval($user['id']);
+@mysqli_query($conn, $updateCertSql);
+
 // Output PDF for download
+if (ob_get_length()) {
+    ob_end_clean();
+}
 $filename = 'Anjuman_Eraquee_Certificate_' . $regId . '.pdf';
 $pdf->Output('D', $filename);
 exit;

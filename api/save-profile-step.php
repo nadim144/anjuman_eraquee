@@ -27,17 +27,97 @@ if ($step === 1) {
     $grandfatherName = trim($_POST['grandfathername'] ?? '');
     $nativePlace = trim($_POST['nativeplace'] ?? '');
     $dob = trim($_POST['dob'] ?? '');
-    $age = trim($_POST['age'] ?? '');
     $gender = trim($_POST['gender'] ?? '');
     $maritalStatus = trim($_POST['maritalstatus'] ?? '');
+    $aadhaar = trim($_POST['aadhaar_number'] ?? '');
+    $additionalMobile = trim($_POST['additional_mobile'] ?? '');
 
+    // Validate Aadhaar if provided
+    $cleanAadhaar = preg_replace('/[^0-9]/', '', $aadhaar);
+    if (!empty($cleanAadhaar)) {
+        if (strlen($cleanAadhaar) !== 12 || preg_match('/^[01]/', $cleanAadhaar) || preg_match('/^(\d)\1{11}$/', $cleanAadhaar)) {
+            echo json_encode(['success' => false, 'message' => 'Please enter a valid 12-digit Indian Aadhaar Number (cannot start with 0 or 1, and cannot have all repeating digits).']);
+            exit;
+        }
+    }
+
+    // Validate Additional Mobile if provided
+    $cleanAddMobile = preg_replace('/[^0-9]/', '', $additionalMobile);
+    if (!empty($cleanAddMobile)) {
+        if (strlen($cleanAddMobile) !== 10 || !preg_match('/^[6-9]\d{9}$/', $cleanAddMobile)) {
+            echo json_encode(['success' => false, 'message' => 'Please enter a valid 10-digit Additional Mobile Number starting with 6, 7, 8, or 9.']);
+            exit;
+        }
+
+        // Check against primary registered phone
+        $primaryPhone = $_SESSION['user_phone'] ?? '';
+        if (empty($primaryPhone)) {
+            $pq = mysqli_query($conn, "SELECT phonenumber FROM user_registrtion WHERE id = $userId LIMIT 1");
+            if ($prow = mysqli_fetch_assoc($pq)) {
+                $primaryPhone = $prow['phonenumber'];
+            }
+        }
+        if (!empty($primaryPhone) && $cleanAddMobile === preg_replace('/[^0-9]/', '', $primaryPhone)) {
+            echo json_encode(['success' => false, 'message' => 'Additional Mobile Number cannot be the same as your primary registered mobile (' . $primaryPhone . ').']);
+            exit;
+        }
+    }
+
+    $age = '';
     if (!empty($dob)) {
         try {
             $dobDate = new DateTime($dob);
             $today = new DateTime('today');
             $age = (string)($dobDate->diff($today)->y);
         } catch (Exception $e) {
-            // keep existing age
+            // ignore
+        }
+    }
+
+    // Handle Profile Picture upload
+    $profilePicSql = "";
+    $newPicPath = null;
+    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
+        $fileTmp = $_FILES['profile_picture']['tmp_name'];
+        $fileName = $_FILES['profile_picture']['name'];
+        $fileSize = $_FILES['profile_picture']['size'];
+
+        if ($fileSize > 5 * 1024 * 1024) {
+            echo json_encode(['success' => false, 'message' => 'Profile picture must be under 5MB in size.']);
+            exit;
+        }
+
+        $allowedExts = ['jpg', 'jpeg', 'png', 'webp'];
+        $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+        if (!in_array($ext, $allowedExts)) {
+            echo json_encode(['success' => false, 'message' => 'Invalid image format. Allowed formats: JPG, PNG, WEBP.']);
+            exit;
+        }
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($finfo, $fileTmp);
+        finfo_close($finfo);
+
+        $allowedMimes = ['image/jpeg', 'image/png', 'image/webp'];
+        if (!in_array($mime, $allowedMimes)) {
+            echo json_encode(['success' => false, 'message' => 'Uploaded file is not a valid image.']);
+            exit;
+        }
+
+        $uploadDir = __DIR__ . '/../uploads/profile_pictures/';
+        if (!is_dir($uploadDir)) {
+            @mkdir($uploadDir, 0777, true);
+        }
+
+        $newFileName = 'member_' . $userId . '_' . time() . '.' . $ext;
+        $destPath = $uploadDir . $newFileName;
+
+        if (move_uploaded_file($fileTmp, $destPath)) {
+            $relPath = 'uploads/profile_pictures/' . $newFileName;
+            $newPicPath = $relPath;
+            $relPathEsc = mysqli_real_escape_string($conn, $relPath);
+            $profilePicSql = ", profile_picture = '$relPathEsc'";
         }
     }
 
@@ -45,22 +125,27 @@ if ($step === 1) {
     $fatherEsc = mysqli_real_escape_string($conn, $fatherName);
     $motherEsc = mysqli_real_escape_string($conn, $motherName);
     $grandfatherEsc = mysqli_real_escape_string($conn, $grandfatherName);
-    $nativeEsc = mysqli_real_escape_string($conn, $nativePlace);
+    $nativeSql = isset($_POST['nativeplace']) ? "nativeplace = '" . mysqli_real_escape_string($conn, $nativePlace) . "'," : "";
     $dobEsc = !empty($dob) ? "'" . mysqli_real_escape_string($conn, $dob) . "'" : "NULL";
     $ageEsc = mysqli_real_escape_string($conn, $age);
     $genderEsc = mysqli_real_escape_string($conn, $gender);
     $maritalEsc = mysqli_real_escape_string($conn, $maritalStatus);
+    $aadhaarEsc = mysqli_real_escape_string($conn, $cleanAadhaar);
+    $addMobileEsc = mysqli_real_escape_string($conn, $cleanAddMobile);
 
     $sql = "UPDATE user_registrtion SET 
         username = '$nameEsc',
         fathername = '$fatherEsc',
         mothername = '$motherEsc',
         grandfathername = '$grandfatherEsc',
-        nativeplace = '$nativeEsc',
+        $nativeSql
         dob = $dobEsc,
         age = '$ageEsc',
         gender = '$genderEsc',
         maritalstatus = '$maritalEsc',
+        aadhaar_number = '$aadhaarEsc',
+        additional_mobile = '$addMobileEsc'
+        $profilePicSql,
         registration_step = GREATEST(COALESCE(registration_step, 1), 2)
         WHERE id = $userId";
 
@@ -69,7 +154,8 @@ if ($step === 1) {
         echo json_encode([
             'success' => true,
             'message' => 'Personal details saved successfully!',
-            'step' => 1
+            'step' => 1,
+            'profile_picture' => $newPicPath
         ]);
         exit;
     } else {

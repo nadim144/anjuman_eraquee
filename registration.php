@@ -395,21 +395,12 @@ if ($isLoggedIn && $conn) {
         <div class="topbar hidden-sm-down">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-8 col-md-9 col-sm-12 col-xs-12">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="header-event">
                             <ul class="list-inline count-list">
                                 <li><a href="tel:9006297386"><i class="fa fa-mobile"></i> +91 9006297386</a></li>
                                 <li><a href="tel:9472502044"><i class="fa fa-mobile"></i> +91 9472502044</a></li>
                                 <li><a href="tel:9738455404"><i class="fa fa-mobile"></i> +91 9738455404</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12">
-                        <div class="header-social text-right">
-                            <ul class="list-inline">
-                                <li><a href="registration.php">Join Membership |</a></li>
-                                <li><a href="user-login.php">User Login |</a></li>
-                                <li><a href="admin/login.php">Admin Login</a></li>
                             </ul>
                         </div>
                     </div>
@@ -465,9 +456,6 @@ if ($isLoggedIn && $conn) {
                                         </ul>
                                     </li>
                                     <li><a href="contact.html">Contact Us</a></li>
-                                    <li><a href="registration.php">Join Membership</a></li>
-                                    <li><a href="user-login.php">User Login</a></li>
-                                    <li><a href="admin/login.php">Admin Login</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -519,9 +507,6 @@ if ($isLoggedIn && $conn) {
                                         </ul>
                                     </li>
                                     <li><a href="contact.html">Contact Us</a></li>
-                                    <li><a href="registration.php">Join Membership</a></li>
-                                    <li><a href="user-login.php">User Login</a></li>
-                                    <li><a href="admin/login.php">Admin Login</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -636,7 +621,39 @@ if ($isLoggedIn && $conn) {
                                 <div class="reg-section-title">
                                     <i class="fa fa-user-circle"></i> Part 1: Personal Details
                                 </div>
-                                <form id="form_step_1">
+                                <form id="form_step_1" enctype="multipart/form-data">
+                                    <!-- Profile Picture Upload Widget -->
+                                    <div class="row align-items-center mb-4" style="background:#f8fafc; padding:18px 20px; border-radius:10px; border:1.5px dashed #cbd5e1; margin-bottom: 25px;">
+                                        <div class="col-sm-3 col-xs-12 text-center mb-2">
+                                            <div style="position:relative; display:inline-block;">
+                                                <?php 
+                                                $picSrc = !empty($userData['profile_picture']) ? htmlspecialchars($userData['profile_picture']) : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="%2394a3b8"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+                                                ?>
+                                                <img id="avatar_preview" src="<?php echo $picSrc; ?>" 
+                                                     alt="Profile Picture" 
+                                                     style="width: 105px; height: 105px; border-radius: 50%; object-fit: cover; border: 3px solid #009146; box-shadow: 0 4px 12px rgba(0,0,0,0.1); background:#ffffff;">
+                                                <label for="profile_pic_input" title="Change Photo" style="position:absolute; bottom:2px; right:2px; background:#009146; color:#ffffff; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.25); border: 2px solid #ffffff; margin:0;">
+                                                    <i class="fa fa-camera"></i>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-9 col-xs-12">
+                                            <label class="form-label-custom" style="font-size:15px; margin-bottom:4px; color:#1e293b;">
+                                                <i class="fa fa-picture-o text-success"></i> Profile Picture
+                                            </label>
+                                            <p style="font-size:12px; color:#64748b; margin-bottom:10px;">
+                                                Upload your passport-style photograph (JPG, PNG, or WEBP, max 5MB). This photo will be printed on your official Membership Certificate.
+                                            </p>
+                                            <input type="file" name="profile_picture" id="profile_pic_input" accept="image/jpeg,image/png,image/webp" style="display:none;" onchange="previewProfilePicture(this)">
+                                            <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+                                                <button type="button" class="btn btn-sm btn-outline-success" onclick="document.getElementById('profile_pic_input').click()" style="font-weight:600; padding:6px 18px; border-radius:6px; border:1.5px solid #009146; color:#009146;">
+                                                    <i class="fa fa-upload"></i> Choose Photo
+                                                </button>
+                                                <span id="pic_name_display" style="font-size:12px; color:#475569; font-weight:600;"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="row">
                                         <div class="col-sm-6 col-xs-12">
                                             <label class="form-label-custom">Full Name *</label>
@@ -660,48 +677,52 @@ if ($isLoggedIn && $conn) {
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-sm-6 col-xs-12">
-                                            <label class="form-label-custom">Native Place *</label>
-                                            <input type="text" name="nativeplace" id="p1_nativeplace" class="form-control-custom" placeholder="Native Village / City / Place" value="<?php echo htmlspecialchars($userData['nativeplace'] ?? ''); ?>" required>
-                                        </div>
-                                        <div class="col-sm-3 col-xs-6">
+                                        <div class="col-sm-4 col-xs-12">
                                             <label class="form-label-custom">Date of Birth *</label>
-                                            <input type="date" name="dob" id="p1_dob" class="form-control-custom" value="<?php echo htmlspecialchars($userData['dob'] ?? ''); ?>" required onchange="calculateDobAge()">
+                                            <input type="date" name="dob" id="p1_dob" class="form-control-custom" value="<?php echo htmlspecialchars($userData['dob'] ?? ''); ?>" required>
                                         </div>
-                                        <div class="col-sm-3 col-xs-6">
-                                            <label class="form-label-custom">Age (Auto)</label>
-                                            <input type="text" name="age" id="p1_age" class="form-control-custom" placeholder="Age" value="<?php echo htmlspecialchars($userData['age'] ?? ''); ?>" readonly required>
+                                        <div class="col-sm-4 col-xs-12">
+                                            <label class="form-label-custom">Gender *</label>
+                                            <select name="gender" id="p1_gender" class="form-control-custom" required style="cursor:pointer;">
+                                                <option value="">-- Select Gender --</option>
+                                                <option value="male" <?php echo (($userData['gender'] ?? 'male') === 'male') ? 'selected' : ''; ?>>Male</option>
+                                                <option value="female" <?php echo (($userData['gender'] ?? '') === 'female') ? 'selected' : ''; ?>>Female</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4 col-xs-12">
+                                            <label class="form-label-custom">Marital Status *</label>
+                                            <select name="maritalstatus" id="p1_maritalstatus" class="form-control-custom" required style="cursor:pointer;">
+                                                <option value="">-- Select Marital Status --</option>
+                                                <option value="married" <?php echo (($userData['maritalstatus'] ?? 'married') === 'married') ? 'selected' : ''; ?>>Married</option>
+                                                <option value="unmarried" <?php echo (($userData['maritalstatus'] ?? '') === 'unmarried') ? 'selected' : ''; ?>>Unmarried</option>
+                                                <option value="divorced" <?php echo (($userData['maritalstatus'] ?? '') === 'divorced') ? 'selected' : ''; ?>>Divorced</option>
+                                            </select>
                                         </div>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-sm-6 col-xs-12">
-                                            <label class="form-label-custom">Gender *</label>
-                                            <div class="custom-radio-group">
-                                                <label class="custom-radio-item">
-                                                    <input type="radio" name="gender" value="male" <?php echo (($userData['gender'] ?? 'male') === 'male') ? 'checked' : ''; ?> required> Male
-                                                </label>
-                                                <label class="custom-radio-item">
-                                                    <input type="radio" name="gender" value="female" <?php echo (($userData['gender'] ?? '') === 'female') ? 'checked' : ''; ?>> Female
-                                                </label>
-                                                <label class="custom-radio-item">
-                                                    <input type="radio" name="gender" value="other" <?php echo (($userData['gender'] ?? '') === 'other') ? 'checked' : ''; ?>> Other
-                                                </label>
+                                            <label class="form-label-custom">Aadhaar Card Number *</label>
+                                            <div style="position:relative;">
+                                                <?php
+                                                $formattedAadhaar = '';
+                                                if (!empty($userData['aadhaar_number'])) {
+                                                    $digitsOnly = preg_replace('/\D/', '', $userData['aadhaar_number']);
+                                                    $formattedAadhaar = trim(chunk_split($digitsOnly, 4, ' '));
+                                                }
+                                                ?>
+                                                <input type="text" name="aadhaar_number" id="p1_aadhaar" class="form-control-custom" placeholder="XXXX XXXX XXXX (12 digits)" maxlength="14" value="<?php echo htmlspecialchars($formattedAadhaar); ?>" required oninput="formatAndValidateAadhaar(this)">
+                                                <span id="aadhaar_status_icon" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:16px;"></span>
                                             </div>
+                                            <small id="aadhaar_msg" style="display:none; font-weight:600; margin-top:-12px; margin-bottom:14px;"></small>
                                         </div>
                                         <div class="col-sm-6 col-xs-12">
-                                            <label class="form-label-custom">Marital Status *</label>
-                                            <div class="custom-radio-group">
-                                                <label class="custom-radio-item">
-                                                    <input type="radio" name="maritalstatus" value="married" <?php echo (($userData['maritalstatus'] ?? 'married') === 'married') ? 'checked' : ''; ?> required> Married
-                                                </label>
-                                                <label class="custom-radio-item">
-                                                    <input type="radio" name="maritalstatus" value="unmarried" <?php echo (($userData['maritalstatus'] ?? '') === 'unmarried') ? 'checked' : ''; ?>> Unmarried
-                                                </label>
-                                                <label class="custom-radio-item">
-                                                    <input type="radio" name="maritalstatus" value="divorced" <?php echo (($userData['maritalstatus'] ?? '') === 'divorced') ? 'checked' : ''; ?>> Divorced
-                                                </label>
+                                            <label class="form-label-custom">Additional Mobile Number</label>
+                                            <div style="position:relative;">
+                                                <input type="text" name="additional_mobile" id="p1_add_mobile" class="form-control-custom" placeholder="10-digit mobile number" maxlength="10" value="<?php echo htmlspecialchars($userData['additional_mobile'] ?? ''); ?>" oninput="validateAdditionalMobile(this)">
+                                                <span id="add_mobile_status_icon" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:16px;"></span>
                                             </div>
+                                            <small id="add_mobile_msg" style="display:none; font-weight:600; margin-top:-12px; margin-bottom:14px;"></small>
                                         </div>
                                     </div>
 
@@ -1064,18 +1085,130 @@ if ($isLoggedIn && $conn) {
         });
     }
 
-    // Auto calculate Age from DOB
-    function calculateDobAge() {
-        var dobVal = document.getElementById('p1_dob').value;
-        if (!dobVal) return;
-        var dob = new Date(dobVal);
-        var today = new Date();
-        var age = today.getFullYear() - dob.getFullYear();
-        var m = today.getMonth() - dob.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-            age--;
+    // Preview selected Profile Picture
+    function previewProfilePicture(input) {
+        if (input.files && input.files[0]) {
+            var file = input.files[0];
+            if (file.size > 5 * 1024 * 1024) {
+                alert('File size exceeds 5MB limit. Please select a smaller photo.');
+                input.value = '';
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatar_preview').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            document.getElementById('pic_name_display').textContent = file.name;
         }
-        document.getElementById('p1_age').value = (age >= 0 ? age : 0);
+    }
+
+    // Format & Validate 12-digit Indian Aadhaar Number
+    function formatAndValidateAadhaar(input) {
+        if (!input) return false;
+        var val = input.value.replace(/\D/g, '');
+        if (val.length > 12) val = val.substring(0, 12);
+
+        var formatted = '';
+        for (var i = 0; i < val.length; i++) {
+            if (i > 0 && i % 4 === 0) formatted += ' ';
+            formatted += val[i];
+        }
+        input.value = formatted;
+
+        var statusIcon = document.getElementById('aadhaar_status_icon');
+        var msg = document.getElementById('aadhaar_msg');
+        if (!statusIcon || !msg) return true;
+
+        if (val.length === 0) {
+            statusIcon.innerHTML = '';
+            msg.style.display = 'none';
+            input.setCustomValidity('Aadhaar number is required');
+            return false;
+        }
+
+        var startsWithZeroOrOne = /^[01]/.test(val);
+        var allSame = /^(\d)\1{11}$/.test(val);
+
+        if (val.length === 12 && !startsWithZeroOrOne && !allSame) {
+            statusIcon.innerHTML = '<i class="fa fa-check-circle" style="color:#009146;"></i>';
+            msg.style.display = 'block';
+            msg.style.color = '#009146';
+            msg.innerHTML = '<i class="fa fa-check"></i> Valid 12-digit Aadhaar Number';
+            input.setCustomValidity('');
+            return true;
+        } else {
+            statusIcon.innerHTML = '<i class="fa fa-times-circle" style="color:#dc2626;"></i>';
+            msg.style.display = 'block';
+            msg.style.color = '#dc2626';
+            if (startsWithZeroOrOne) {
+                msg.innerText = 'Invalid Aadhaar: Cannot start with 0 or 1';
+                input.setCustomValidity('Aadhaar cannot start with 0 or 1');
+            } else if (allSame) {
+                msg.innerText = 'Invalid Aadhaar: Cannot have all repeating digits';
+                input.setCustomValidity('Invalid Aadhaar number');
+            } else {
+                msg.innerText = 'Please enter a complete 12-digit Aadhaar Number (' + val.length + '/12 digits)';
+                input.setCustomValidity('Please enter complete 12 digits');
+            }
+            return false;
+        }
+    }
+
+    // Validate Additional Mobile Number (optional, but if provided must be 10 digits and valid)
+    var registeredPrimaryPhone = '<?php echo htmlspecialchars($userData['phonenumber'] ?? $_SESSION['user_phone'] ?? ''); ?>';
+
+    function validateAdditionalMobile(input) {
+        if (!input) return true;
+        var val = input.value.replace(/\D/g, '');
+        if (val.length > 10) val = val.substring(0, 10);
+        input.value = val;
+
+        var statusIcon = document.getElementById('add_mobile_status_icon');
+        var msg = document.getElementById('add_mobile_msg');
+        if (!statusIcon || !msg) return true;
+
+        if (val.length === 0) {
+            statusIcon.innerHTML = '';
+            msg.style.display = 'none';
+            input.setCustomValidity('');
+            return true;
+        }
+
+        if (val.length < 10) {
+            statusIcon.innerHTML = '<i class="fa fa-times-circle" style="color:#dc2626;"></i>';
+            msg.style.display = 'block';
+            msg.style.color = '#dc2626';
+            msg.innerText = 'Mobile number must be 10 digits (' + val.length + '/10 digits)';
+            input.setCustomValidity('Mobile number must be 10 digits');
+            return false;
+        }
+
+        var startsWithValid = /^[6-9]/.test(val);
+        if (!startsWithValid) {
+            statusIcon.innerHTML = '<i class="fa fa-times-circle" style="color:#dc2626;"></i>';
+            msg.style.display = 'block';
+            msg.style.color = '#dc2626';
+            msg.innerText = 'Invalid Mobile: Must start with 6, 7, 8, or 9';
+            input.setCustomValidity('Must start with 6, 7, 8, or 9');
+            return false;
+        }
+
+        if (registeredPrimaryPhone && val === registeredPrimaryPhone) {
+            statusIcon.innerHTML = '<i class="fa fa-times-circle" style="color:#dc2626;"></i>';
+            msg.style.display = 'block';
+            msg.style.color = '#dc2626';
+            msg.innerText = 'Additional number cannot be the same as your primary registered mobile (' + registeredPrimaryPhone + ')';
+            input.setCustomValidity('Must be different from registered phone');
+            return false;
+        }
+
+        statusIcon.innerHTML = '<i class="fa fa-check-circle" style="color:#009146;"></i>';
+        msg.style.display = 'block';
+        msg.style.color = '#009146';
+        msg.innerHTML = '<i class="fa fa-check"></i> Valid Additional Mobile Number';
+        input.setCustomValidity('');
+        return true;
     }
 
     // Handle "Permanent Address same as Present Address" Checkbox
@@ -1138,6 +1271,22 @@ if ($isLoggedIn && $conn) {
     function saveProgressiveStep(step, advanceToNext) {
         var form = document.getElementById('form_step_' + step);
 
+        // If step 1, validate Aadhaar and Additional Mobile
+        if (step === 1) {
+            var aadhaarInput = document.getElementById('p1_aadhaar');
+            if (aadhaarInput && !formatAndValidateAadhaar(aadhaarInput)) {
+                aadhaarInput.focus();
+                showStatus('Please enter a valid 12-digit Indian Aadhaar Number.', false);
+                return;
+            }
+            var addMobileInput = document.getElementById('p1_add_mobile');
+            if (addMobileInput && !validateAdditionalMobile(addMobileInput)) {
+                addMobileInput.focus();
+                showStatus('Please enter a valid 10-digit Additional Mobile Number.', false);
+                return;
+            }
+        }
+
         // If advancing, check HTML5 validation
         if (advanceToNext) {
             if (!form.checkValidity()) {
@@ -1168,6 +1317,10 @@ if ($isLoggedIn && $conn) {
             }
             if (data.success) {
                 showStatus(data.message, true);
+                if (data.profile_picture) {
+                    var preview = document.getElementById('avatar_preview');
+                    if (preview) preview.src = data.profile_picture;
+                }
                 if (advanceToNext) {
                     goToStep(step + 1);
                 }
@@ -1230,11 +1383,11 @@ if ($isLoggedIn && $conn) {
         });
     }
 
-    // On page load: calculate age if DOB already filled
+    // On page load: validate existing Aadhaar if pre-filled
     document.addEventListener('DOMContentLoaded', function() {
-        var dobEl = document.getElementById('p1_dob');
-        if (dobEl && dobEl.value) {
-            calculateDobAge();
+        var aadhaarEl = document.getElementById('p1_aadhaar');
+        if (aadhaarEl && aadhaarEl.value) {
+            formatAndValidateAadhaar(aadhaarEl);
         }
     });
     </script>
