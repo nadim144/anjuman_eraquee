@@ -143,6 +143,11 @@ This file tracks all development work done on the **Anjuman Eraquee India** webs
   - Removed the `Membership` accordion dropdown completely as requested, retaining the clean direct top-level menu items: `Join Membership`, `User Login`, and `Admin Login` directly below `Contact Us`.
   - Standardized the `<nav id="dropdown">` structure across all 17 HTML pages, `user-login.php`, and `admin/login.php` so the mobile hamburger menu behavior and options are 100% consistent across every single page.
   - Added `.htaccess` to emit `Cache-Control: no-cache, no-store, must-revalidate` and `Pragma: no-cache` so browsers (especially mobile/DevTools) always serve fresh content and do not retain stale cached menus.
+- **Login UI Enhancement & Visual Consistency:**
+  - Standardized `user-login.php` layout and card structure to match `admin/login.php` using `.user-login-wrapper` and `.login-card`.
+  - Added proper margin-top and padding (`50px 15px`, with `@media (max-width: 767px)` margin-top and padding) with `clear: both;` to ensure the login card is cleanly separated from the mobile header and never clipped or pressed against the top bar.
+  - Added official Anjuman Eraquee INDIA logo (`images/logo/logo.png`) above the headings on both `user-login.php` and `admin/login.php` for enhanced appearance.
+  - Removed input prepend icons (`fa fa-user`, `fa fa-lock`, and `fa fa-phone`) from `user-login.php` to achieve a clean input field presentation matching `admin/login.php`.
 - **Files updated:**
   - `user-login.php`, `admin/login.php`
   - `css/meanmenu.min.css`
@@ -162,7 +167,9 @@ This file tracks all development work done on the **Anjuman Eraquee India** webs
 - [x] Implement **Admin Member Management (CRUD, Edit, Delete, View Details, Issue Temp Password)**.
 - [x] Implement **Downloadable PDF Membership Certificate** with welcoming message.
 - [x] Standardize **Mobile Hamburger Menu** consistently across all site pages without redundant Membership submenus.
+- [x] Align **User Login** appearance with Admin Login (proper margin-top, flex centering, and logo integration).
 - [ ] Connect real SMS Gateway API (Fast2SMS / Twilio) using API Key for real-time mobile SMS delivery.
 - [ ] Upload updated files to **InfinityFree** hosting via FileZilla.
+
 
 
