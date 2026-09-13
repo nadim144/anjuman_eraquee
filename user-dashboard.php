@@ -128,6 +128,13 @@ if ($conn && isset($_SESSION['user_id'])) {
         </div>
     <?php endif; ?>
 
+    <?php if (isset($_GET['registered'])): ?>
+        <div class="alert alert-success alert-dismissible fade show font-weight-bold mb-4" style="background:#e8f5e9; border:1.5px solid #2e7d32; color:#1b5e20;">
+            <i class="fa fa-check-circle" style="font-size:18px;"></i> 
+            Congratulations! Your Membership details have been saved successfully. You can download your official Membership Certificate below or edit your details anytime.
+        </div>
+    <?php endif; ?>
+
     <?php if (!$userData): ?>
         <div class="alert alert-warning">
             <i class="fa fa-exclamation-triangle"></i> Member details could not be retrieved. Please try logging in again.
@@ -140,7 +147,10 @@ if ($conn && isset($_SESSION['user_id'])) {
                 <h4 class="mb-1">Welcome, <strong><?php echo htmlspecialchars($userData['username'] ?? 'Member'); ?></strong> <span class="badge-verified"><i class="fa fa-check"></i> Verified Member</span></h4>
                 <p class="mb-0 text-muted" style="font-size: 13px;">Registered Phone: +91 <?php echo htmlspecialchars($userData['phonenumber'] ?? ''); ?> | Member ID: #<?php echo str_pad($userData['id'] ?? 1, 5, '0', STR_PAD_LEFT); ?></p>
             </div>
-            <div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="registration.php" class="btn btn-outline-success font-weight-bold" style="background: #ffffff; color: #009146; border: 1.5px solid #009146; box-shadow: 0 2px 6px rgba(0,0,0,0.06); padding: 8px 16px;">
+                    <i class="fa fa-pencil-square-o"></i> Edit Profile Details
+                </a>
                 <a href="download-certificate.php" class="btn btn-light font-weight-bold" style="color: #009146; box-shadow: 0 2px 6px rgba(0,0,0,0.1); padding: 8px 16px;">
                     <i class="fa fa-file-pdf-o text-danger"></i> Download Membership Certificate (PDF)
                 </a>
@@ -151,7 +161,10 @@ if ($conn && isset($_SESSION['user_id'])) {
             <!-- Personal Information -->
             <div class="col-md-6">
                 <div class="dashboard-card">
-                    <h4><i class="fa fa-id-card-o"></i> Personal Information</h4>
+                    <div class="d-flex justify-content-between align-items-center mb-3" style="border-bottom: 2px solid #eee; padding-bottom: 10px;">
+                        <h4 style="margin: 0; border: none; padding: 0;"><i class="fa fa-id-card-o"></i> Personal Information</h4>
+                        <a href="registration.php" class="btn btn-sm btn-outline-success" style="font-size: 12px; font-weight: 600;"><i class="fa fa-pencil"></i> Edit</a>
+                    </div>
                     <div class="row">
                         <div class="col-6">
                             <div class="info-label">Full Name</div>
@@ -188,7 +201,10 @@ if ($conn && isset($_SESSION['user_id'])) {
             <!-- Contact Information -->
             <div class="col-md-6">
                 <div class="dashboard-card">
-                    <h4><i class="fa fa-phone"></i> Contact Details</h4>
+                    <div class="d-flex justify-content-between align-items-center mb-3" style="border-bottom: 2px solid #eee; padding-bottom: 10px;">
+                        <h4 style="margin: 0; border: none; padding: 0;"><i class="fa fa-phone"></i> Contact Details</h4>
+                        <a href="registration.php" class="btn btn-sm btn-outline-success" style="font-size: 12px; font-weight: 600;"><i class="fa fa-pencil"></i> Edit</a>
+                    </div>
                     <div class="row">
                         <div class="col-6">
                             <div class="info-label">Phone Number</div>
@@ -218,7 +234,10 @@ if ($conn && isset($_SESSION['user_id'])) {
             <!-- Education & Occupation -->
             <div class="col-md-12">
                 <div class="dashboard-card">
-                    <h4><i class="fa fa-briefcase"></i> Qualification & Occupation</h4>
+                    <div class="d-flex justify-content-between align-items-center mb-3" style="border-bottom: 2px solid #eee; padding-bottom: 10px;">
+                        <h4 style="margin: 0; border: none; padding: 0;"><i class="fa fa-briefcase"></i> Qualification & Occupation</h4>
+                        <a href="registration.php" class="btn btn-sm btn-outline-success" style="font-size: 12px; font-weight: 600;"><i class="fa fa-pencil"></i> Edit</a>
+                    </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="info-label">Qualification</div>

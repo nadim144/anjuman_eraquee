@@ -155,6 +155,87 @@ This file tracks all development work done on the **Anjuman Eraquee India** webs
   - `js/site-settings.js`
   - `.htaccess`
 
+### 🚀 Progressive Multi-Part Registration & Join Membership Sign-Up System
+- **Responsive Join Membership Sign-Up Dialog (`js/site-settings.js`, `signup.php`):**
+  - Integrated a global responsive Sign-Up Modal dialog across desktop and mobile devices triggered by clicking "Join Membership" anywhere on the site.
+  - Collects Mobile Number, Email Address, Password, and Confirm Password with eye icon visibility toggles.
+  - Checks for existing accounts, hashes password via `password_hash`, starts session, and redirects to `registration.php`.
+- **Progressive Multi-Part Registration Wizard (`registration.php`, `api/save-profile-step.php`):**
+  - Designed responsive 3-step wizard with real-time step progress indicator:
+    - **Part 1: Personal Details:** Full Name, Father's Name, Mother's Name, Grandfather's Name, Native Place, Date of Birth with auto-age calculation, Gender, and Marital Status. Features asynchronous **Save** and **Next** buttons.
+    - **Part 2: Address Details:** Current Address (House/Street, Village/Post, District, Pincode, State, Country) and Permanent Address with a *"Permanent address is the same as Present address"* toggle that synchronizes values in real-time. Features **Previous**, **Save**, and **Next** buttons.
+    - **Part 3: Education & Professional Details:** Highest Qualification, Qualification Details, Current Occupation, Occupation Details, WhatsApp Number, and Suggestions/Feedback. Features **Previous**, **Save**, and final **Submit Registration** button that marks profile completed and redirects to `user-dashboard.php`.
+  - Automatically loads and pre-populates existing data for logged-in users so they can review, continue, or edit their details.
+  - For unauthenticated direct visits, renders a clean Sign-Up card directly on the page.
+  - Updated `registration.html` to seamlessly redirect to `registration.php`.
+- **Password Eye Icon Toggle:**
+  - Added interactive show/hide password toggle (`fa fa-eye` / `fa fa-eye-slash`) across the Sign-Up modal, `registration.php`, `user-login.php`, and `admin/login.php`.
+- **User Dashboard Profile Editing (`user-dashboard.php`):**
+  - Added **"Edit Profile Details"** button in the dashboard welcome banner and edit links on each section card (Personal, Contact & Address, Education & Profession), directing users to `registration.php` to correct any data.
+  - All edits immediately reflect on `user-dashboard.php` and in the downloadable official PDF certificate (`download-certificate.php`).
+- **Files created/updated:**
+  - `signup.php` (created)
+  - `registration.php` (created)
+  - `api/save-profile-step.php` (created)
+  - `js/site-settings.js` (updated)
+  - `user-dashboard.php` (updated)
+  - `user-login.php` (updated)
+  - `admin/login.php` (updated)
+  - `registration.html` (updated)
+
+### 🗄️ Database Schema Updates (`user_registrtion`)
+Two new columns were added to `user_registrtion` to support progressive saving and tracking profile completion:
+1. **`registration_step`** (`TINYINT(1) DEFAULT 1`) — Tracks user progress through the multi-part form (`1` = Personal, `2` = Address, `3` = Education & Profession).
+2. **`is_profile_completed`** (`TINYINT(1) DEFAULT 0`) — Flags whether the user completed final submission (`1`) or only initial sign-up / draft (`0`).
+
+**Production / InfinityFree SQL Migration Command:**
+```sql
+ALTER TABLE user_registrtion 
+ADD COLUMN registration_step TINYINT(1) DEFAULT 1,
+ADD COLUMN is_profile_completed TINYINT(1) DEFAULT 0;
+```
+
+**Full Table Schema (`user_registrtion`):**
+- `id` (INT AUTO_INCREMENT PRIMARY KEY)
+- `username` (VARCHAR(255)) — Full Name
+- `fathername` (VARCHAR(255))
+- `mothername` (VARCHAR(255))
+- `grandfathername` (VARCHAR(255))
+- `nativeplace` (VARCHAR(255))
+- `dob` (DATE)
+- `age` (VARCHAR(50))
+- `gender` (VARCHAR(50))
+- `maritalstatus` (VARCHAR(50))
+- `presentaddress` (TEXT)
+- `presentvillatpost` (VARCHAR(255))
+- `presentdistrict` (VARCHAR(255))
+- `presentpincode` (VARCHAR(50))
+- `presentstate` (VARCHAR(255))
+- `presentcountry` (VARCHAR(255))
+- `presentaddresstopermanent` (VARCHAR(50))
+- `permanentaddress` (TEXT)
+- `permanentvillatpost` (VARCHAR(255))
+- `permanentdistrict` (VARCHAR(255))
+- `permanentpincode` (VARCHAR(50))
+- `permanentstate` (VARCHAR(255))
+- `permanentcountry` (VARCHAR(255))
+- `email` (VARCHAR(255))
+- `phonenumber` (VARCHAR(100))
+- `whatsappnumber` (VARCHAR(100))
+- `qulification` (VARCHAR(255))
+- `qualificationdetails` (TEXT)
+- `occupation` (VARCHAR(255))
+- `occupationdetails` (TEXT)
+- `messageinfo` (TEXT)
+- `password` (VARCHAR(255))
+- `created_at` (TIMESTAMP)
+- `otp_code` (VARCHAR(10))
+- `otp_expiry` (DATETIME)
+- `is_temp_password` (TINYINT(1))
+- `reset_requested` (TINYINT(1))
+- `registration_step` (TINYINT(1) DEFAULT 1) [NEW]
+- `is_profile_completed` (TINYINT(1) DEFAULT 0) [NEW]
+
 ---
 
 ## 📋 Pending / Next Steps
@@ -168,6 +249,9 @@ This file tracks all development work done on the **Anjuman Eraquee India** webs
 - [x] Implement **Downloadable PDF Membership Certificate** with welcoming message.
 - [x] Standardize **Mobile Hamburger Menu** consistently across all site pages without redundant Membership submenus.
 - [x] Align **User Login** appearance with Admin Login (proper margin-top, flex centering, and logo integration).
+- [x] Implement **Join Membership Sign-Up Modal Dialog** (Desktop & Mobile) with eye toggle icon.
+- [x] Implement **Progressive Multi-Part Registration** (Personal -> Address -> Education/Profession) with Save & Next.
+- [x] Implement **Profile Editing** from Member Dashboard.
 - [ ] Connect real SMS Gateway API (Fast2SMS / Twilio) using API Key for real-time mobile SMS delivery.
 - [ ] Upload updated files to **InfinityFree** hosting via FileZilla.
 

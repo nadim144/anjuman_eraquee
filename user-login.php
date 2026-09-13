@@ -482,7 +482,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <label for="password" style="margin: 0;">Password</label>
                             <a href="javascript:void(0)" onclick="toggleForgotBox()" style="font-size: 12px; color: #009146; font-weight: 600;">Forgot Password?</a>
                         </div>
-                        <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
+                        <div style="position: relative;">
+                            <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required style="padding-right: 42px;">
+                            <button type="button" onclick="togglePasswordVisibility('password', 'pass_eye_icon')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #64748b; font-size: 15px; padding: 4px;">
+                                <i id="pass_eye_icon" class="fa fa-eye"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <button type="submit" class="btn-custom">
@@ -527,13 +532,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="footer-link">
-                Not registered yet? <a href="registration.html" class="join-link">Join Membership</a><br>
+                Not registered yet? <a href="registration.php" class="join-link">Join Membership</a><br>
                 <a href="index.html" class="back-link">&larr; Back to Main Website</a>
             </div>
         </div>
     </div>
 
 <script>
+function togglePasswordVisibility(fieldId, iconId) {
+    var input = document.getElementById(fieldId);
+    var icon = document.getElementById(iconId);
+    if (!input) return;
+    if (input.type === 'password') {
+        input.type = 'text';
+        if (icon) icon.className = 'fa fa-eye-slash';
+    } else {
+        input.type = 'password';
+        if (icon) icon.className = 'fa fa-eye';
+    }
+}
+
 function switchTab(tab) {
     if (tab === 'password') {
         document.getElementById('pane-pass').style.display = 'block';
