@@ -15,9 +15,11 @@ if (!function_exists('get_db_connection')) {
             @include $customConfig;
         }
 
-        $dbConfigs = [];
+        $isLocalhost = in_array(strtolower(explode(':', $_SERVER['HTTP_HOST'] ?? '')[0]), ['localhost', '127.0.0.1', '']) || php_sapi_name() === 'cli';
+
+        $remoteConfigs = [];
         if (isset($infinityfree_config) && is_array($infinityfree_config)) {
-            $dbConfigs[] = $infinityfree_config;
+            $remoteConfigs[] = $infinityfree_config;
         }
 
         $defaultConfigs = [
@@ -28,7 +30,10 @@ if (!function_exists('get_db_connection')) {
             ['localhost', 'root', '', 'codecxss_anjuman', 3306],
             ['localhost', 'root', '', 'anjuman_user', 3306]
         ];
-        $dbConfigs = array_merge($dbConfigs, $defaultConfigs);
+
+        $dbConfigs = $isLocalhost 
+            ? array_merge($defaultConfigs, $remoteConfigs) 
+            : array_merge($remoteConfigs, $defaultConfigs);
 
         foreach ($dbConfigs as $cfg) {
             $port = isset($cfg[4]) ? $cfg[4] : 3306;
