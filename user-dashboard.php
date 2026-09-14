@@ -41,13 +41,106 @@ if ($conn && isset($_SESSION['user_id'])) {
         .dashboard-header {
             background: #009146;
             color: #fff;
-            padding: 20px 0;
+            padding: 16px 0;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .dashboard-header .header-brand {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         .dashboard-header h2 {
             margin: 0;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
+            line-height: 1.25;
+            letter-spacing: -0.2px;
+        }
+        .dashboard-header small {
+            font-size: 12px;
+            opacity: 0.9;
+            letter-spacing: 0.3px;
+            margin-top: 2px;
+        }
+        .dashboard-header .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .btn-dash-nav {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: #ffffff;
+            color: #1e293b;
+            font-weight: 600;
+            font-size: 13px;
+            line-height: 1;
+            padding: 7px 14px;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .btn-dash-nav:hover, .btn-dash-nav:focus {
+            background: #f1f5f9;
+            color: #0f172a;
+            text-decoration: none;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+        }
+        .btn-dash-nav.btn-logout {
+            color: #dc2626;
+            background: #ffffff;
+            border: 1px solid #fee2e2;
+        }
+        .btn-dash-nav.btn-logout:hover {
+            background: #fef2f2;
+            color: #b91c1c;
+            border-color: #fca5a5;
+        }
+        .btn-dash-nav i {
+            font-size: 13px;
+        }
+        @media (max-width: 767px) {
+            .dashboard-header {
+                padding: 12px 0;
+            }
+            .dashboard-header h2 {
+                font-size: 17px;
+                white-space: nowrap;
+            }
+            .dashboard-header small {
+                font-size: 11px;
+            }
+            .dashboard-header .header-actions {
+                gap: 6px;
+            }
+            .btn-dash-nav {
+                font-size: 12px;
+                padding: 6px 10px;
+                gap: 4px;
+                border-radius: 5px;
+            }
+            .btn-dash-nav i {
+                font-size: 12px;
+            }
+        }
+        @media (max-width: 420px) {
+            .dashboard-header h2 {
+                font-size: 15px;
+            }
+            .dashboard-header small {
+                font-size: 10px;
+            }
+            .btn-dash-nav {
+                font-size: 11px;
+                padding: 5px 8px;
+            }
         }
         .dashboard-card {
             background: #fff;
@@ -79,20 +172,6 @@ if ($conn && isset($_SESSION['user_id'])) {
             margin-bottom: 15px;
             word-break: break-word;
         }
-        .btn-logout {
-            background: #dc3545;
-            color: #fff;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 4px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-        .btn-logout:hover {
-            background: #c82333;
-            color: #fff;
-        }
         .badge-verified {
             background: #28a745;
             color: #fff;
@@ -107,14 +186,14 @@ if ($conn && isset($_SESSION['user_id'])) {
 
 <div class="dashboard-header mb-4">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
+        <div class="d-flex justify-content-between align-items-center flex-nowrap" style="gap: 10px;">
+            <div class="header-brand">
                 <h2><i class="fa fa-user-circle"></i> Member Dashboard</h2>
                 <small>Anjuman Eraquee INDIA</small>
             </div>
-            <div>
-                <a href="index.html" class="btn btn-sm btn-light font-weight-bold mr-2"><i class="fa fa-home"></i> Home</a>
-                <a href="user-logout.php" class="btn-logout"><i class="fa fa-sign-out"></i> Logout</a>
+            <div class="header-actions">
+                <a href="index.html" class="btn-dash-nav"><i class="fa fa-home" style="color:#009146;"></i> Home</a>
+                <a href="user-logout.php" class="btn-dash-nav btn-logout"><i class="fa fa-sign-out"></i> Logout</a>
             </div>
         </div>
     </div>

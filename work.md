@@ -283,6 +283,7 @@ ALTER TABLE `user_registrtion` ADD COLUMN `cast` VARCHAR(100) NULL AFTER `marita
 - [x] Introduce and validate **Additional Mobile Number** field.
 - [x] Introduce **Cast dropdown control** in Personal Details before Aadhaar Card Number with options: `Kalal`, `Kalwar`, `Kalar`, `Eraquee(Iraqi)`, `Kalal Lari`, `Kalal Choudhary`, `Araqi`, `Ranki`, saved to database and rendered in Dashboard, Certificate, and Admin portal.
 - [x] Fix profile picture upload preview by removing broken inline SVG attribute text and adding dedicated **Dummy Human Avatar** vector graphic (`images/dummy-avatar.svg`) in Registration & User Dashboard.
+- [x] Improve **Member Dashboard Mobile Header & Buttons**: Prevented "Member Dashboard" from wrapping awkwardly on mobile, unified Logout button design with Home button using clean inline-flex pills and responsive typography.
 - [x] Render **Circular Profile Picture** on the left-hand side of Certificate before "ANJUMAN ERAQUEE INDIA".
 - [x] Enable **Persistent Server & Database Storage** for generated membership certificates.
 - [ ] Connect real SMS Gateway API (Fast2SMS / Twilio) using API Key for real-time mobile SMS delivery.
