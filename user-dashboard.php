@@ -144,9 +144,12 @@ if ($conn && isset($_SESSION['user_id'])) {
         <!-- Welcome Banner -->
         <div class="alert alert-success d-flex justify-content-between align-items-center mb-4 flex-wrap" style="gap: 15px;">
             <div style="display: flex; align-items: center; gap: 15px;">
-                <?php if (!empty($userData['profile_picture'])): ?>
-                    <img src="<?php echo htmlspecialchars($userData['profile_picture']); ?>" alt="Profile Photo" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
-                <?php endif; ?>
+                <?php 
+                $dashPic = (!empty($userData['profile_picture']) && file_exists(__DIR__ . '/' . $userData['profile_picture'])) 
+                    ? htmlspecialchars($userData['profile_picture']) 
+                    : 'images/dummy-avatar.svg';
+                ?>
+                <img src="<?php echo $dashPic; ?>" alt="Profile Photo" onerror="this.src='images/dummy-avatar.svg'" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.15); background:#ffffff;">
                 <div>
                     <h4 class="mb-1">Welcome, <strong><?php echo htmlspecialchars($userData['username'] ?? 'Member'); ?></strong> <span class="badge-verified"><i class="fa fa-check"></i> Verified Member</span></h4>
                     <p class="mb-0 text-muted" style="font-size: 13px;">Registered Phone: +91 <?php echo htmlspecialchars($userData['phonenumber'] ?? ''); ?> | Member ID: #<?php echo str_pad($userData['id'] ?? 1, 5, '0', STR_PAD_LEFT); ?></p>
@@ -192,6 +195,18 @@ if ($conn && isset($_SESSION['user_id'])) {
                             <div class="info-value"><?php echo !empty($userData['dob']) ? htmlspecialchars($userData['dob']) : 'N/A'; ?></div>
                         </div>
                         <div class="col-6">
+                            <div class="info-label">Gender</div>
+                            <div class="info-value"><?php echo ucfirst(htmlspecialchars($userData['gender'] ?? 'N/A')); ?></div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-label">Marital Status</div>
+                            <div class="info-value"><?php echo ucfirst(htmlspecialchars($userData['maritalstatus'] ?? 'N/A')); ?></div>
+                        </div>
+                        <div class="col-6">
+                            <div class="info-label">Cast</div>
+                            <div class="info-value"><?php echo htmlspecialchars($userData['cast'] ?? 'N/A'); ?></div>
+                        </div>
+                        <div class="col-6">
                             <div class="info-label">Aadhaar Number</div>
                             <div class="info-value">
                                 <?php 
@@ -204,18 +219,12 @@ if ($conn && isset($_SESSION['user_id'])) {
                                 ?>
                             </div>
                         </div>
+                        <?php if (!empty($userData['nativeplace'])): ?>
                         <div class="col-6">
-                            <div class="info-label">Gender</div>
-                            <div class="info-value"><?php echo ucfirst(htmlspecialchars($userData['gender'] ?? 'N/A')); ?></div>
-                        </div>
-                        <div class="col-6">
-                            <div class="info-label">Marital Status</div>
-                            <div class="info-value"><?php echo ucfirst(htmlspecialchars($userData['maritalstatus'] ?? 'N/A')); ?></div>
-                        </div>
-                        <div class="col-12">
                             <div class="info-label">Native Place</div>
-                            <div class="info-value"><?php echo htmlspecialchars($userData['nativeplace'] ?? 'N/A'); ?></div>
+                            <div class="info-value"><?php echo htmlspecialchars($userData['nativeplace']); ?></div>
                         </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

@@ -249,6 +249,7 @@ The following columns have been added to `user_registrtion`:
 ```sql
 ALTER TABLE user_registrtion 
 ADD COLUMN profile_picture VARCHAR(255) NULL AFTER username,
+ADD COLUMN `cast` VARCHAR(100) NULL AFTER maritalstatus,
 ADD COLUMN aadhaar_number VARCHAR(20) NULL AFTER dob,
 ADD COLUMN additional_mobile VARCHAR(20) NULL AFTER phonenumber,
 ADD COLUMN certificate_path VARCHAR(255) NULL,
@@ -257,9 +258,14 @@ ADD COLUMN registration_step TINYINT(1) DEFAULT 1,
 ADD COLUMN is_profile_completed TINYINT(1) DEFAULT 0;
 ```
 
+If your live database already had previous columns added, simply run:
+```sql
+ALTER TABLE `user_registrtion` ADD COLUMN `cast` VARCHAR(100) NULL AFTER `maritalstatus`;
+```
+
 ---
 
-## 📋 Pending / Next Steps
+## 📋 Recent Updates & Pending / Next Steps
 
 - [x] Set up **MySQL database** for Registration/Membership feature (`codecxss_anjuman` / `user_registrtion` table created & verified).
 - [x] Resolve database connection issues across all PHP endpoints (`db.php` implemented).
@@ -275,10 +281,9 @@ ADD COLUMN is_profile_completed TINYINT(1) DEFAULT 0;
 - [x] Implement **Profile Editing** from Member Dashboard.
 - [x] Reorder Personal Details: Gender and Marital Status before Aadhaar Card Number, remove Native Place.
 - [x] Introduce and validate **Additional Mobile Number** field.
+- [x] Introduce **Cast dropdown control** in Personal Details before Aadhaar Card Number with options: `Kalal`, `Kalwar`, `Kalar`, `Eraquee(Iraqi)`, `Kalal Lari`, `Kalal Choudhary`, `Araqi`, `Ranki`, saved to database and rendered in Dashboard, Certificate, and Admin portal.
+- [x] Fix profile picture upload preview by removing broken inline SVG attribute text and adding dedicated **Dummy Human Avatar** vector graphic (`images/dummy-avatar.svg`) in Registration & User Dashboard.
 - [x] Render **Circular Profile Picture** on the left-hand side of Certificate before "ANJUMAN ERAQUEE INDIA".
 - [x] Enable **Persistent Server & Database Storage** for generated membership certificates.
 - [ ] Connect real SMS Gateway API (Fast2SMS / Twilio) using API Key for real-time mobile SMS delivery.
 - [ ] Upload updated files to **InfinityFree** hosting via FileZilla.
-
-
-

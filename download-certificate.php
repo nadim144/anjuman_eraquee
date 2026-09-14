@@ -252,11 +252,11 @@ $details = [
     ['Full Name', utf8_decode($user['username'] ?? '-'), 'Father\'s Name', utf8_decode($user['fathername'] ?? '-')],
     ['Mother\'s Name', utf8_decode($user['mothername'] ?? '-'), 'Grandfather\'s Name', utf8_decode($user['grandfathername'] ?? '-')],
     ['Date of Birth', !empty($user['dob']) ? $user['dob'] : '-', 'Gender', ucfirst($user['gender'] ?? '-')],
-    ['Aadhaar Number', $aadhaarFormatted, 'Marital Status', ucfirst(utf8_decode($user['maritalstatus'] ?? '-'))],
-    ['Phone Number', $user['phonenumber'] ?? '-', 'Alternate Mobile', !empty($user['additional_mobile']) ? $user['additional_mobile'] : '-'],
-    ['WhatsApp Number', $user['whatsappnumber'] ?? '-', 'District / State', utf8_decode(($user['presentdistrict'] ?? '-') . ', ' . ($user['presentstate'] ?? '-'))],
-    ['Email Address', utf8_decode($user['email'] ?? '-'), 'Occupation', utf8_decode($user['occupation'] ?? '-')],
-    ['Qualification', utf8_decode($user['qulification'] ?? '-'), 'Qualification Details', utf8_decode($user['qualificationdetails'] ?? '-')],
+    ['Cast', utf8_decode($user['cast'] ?? '-'), 'Aadhaar Number', $aadhaarFormatted],
+    ['Marital Status', ucfirst(utf8_decode($user['maritalstatus'] ?? '-')), 'Alternate Mobile', !empty($user['additional_mobile']) ? $user['additional_mobile'] : '-'],
+    ['Phone Number', $user['phonenumber'] ?? '-', 'WhatsApp Number', $user['whatsappnumber'] ?? '-'],
+    ['District / State', utf8_decode(($user['presentdistrict'] ?? '-') . ', ' . ($user['presentstate'] ?? '-')), 'Email Address', utf8_decode($user['email'] ?? '-')],
+    ['Occupation', utf8_decode($user['occupation'] ?? '-'), 'Qualification', utf8_decode($user['qulification'] ?? '-')],
 ];
 
 foreach ($details as $row) {

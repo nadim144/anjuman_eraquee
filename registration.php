@@ -627,10 +627,13 @@ if ($isLoggedIn && $conn) {
                                         <div class="col-sm-3 col-xs-12 text-center mb-2">
                                             <div style="position:relative; display:inline-block;">
                                                 <?php 
-                                                $picSrc = !empty($userData['profile_picture']) ? htmlspecialchars($userData['profile_picture']) : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="%2394a3b8"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>';
+                                                $picSrc = (!empty($userData['profile_picture']) && file_exists(__DIR__ . '/' . $userData['profile_picture'])) 
+                                                    ? htmlspecialchars($userData['profile_picture']) 
+                                                    : 'images/dummy-avatar.svg';
                                                 ?>
                                                 <img id="avatar_preview" src="<?php echo $picSrc; ?>" 
                                                      alt="Profile Picture" 
+                                                     onerror="this.src='images/dummy-avatar.svg'"
                                                      style="width: 105px; height: 105px; border-radius: 50%; object-fit: cover; border: 3px solid #009146; box-shadow: 0 4px 12px rgba(0,0,0,0.1); background:#ffffff;">
                                                 <label for="profile_pic_input" title="Change Photo" style="position:absolute; bottom:2px; right:2px; background:#009146; color:#ffffff; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.25); border: 2px solid #ffffff; margin:0;">
                                                     <i class="fa fa-camera"></i>
@@ -702,6 +705,20 @@ if ($isLoggedIn && $conn) {
 
                                     <div class="row">
                                         <div class="col-sm-6 col-xs-12">
+                                            <label class="form-label-custom">Cast *</label>
+                                            <select name="cast" id="p1_cast" class="form-control-custom" required style="cursor:pointer;">
+                                                <option value="">-- Select Cast --</option>
+                                                <?php
+                                                $castOptions = ['Kalal', 'Kalwar', 'Kalar', 'Eraquee(Iraqi)', 'Kalal Lari', 'Kalal Choudhary', 'Araqi', 'Ranki'];
+                                                $selectedCast = $userData['cast'] ?? '';
+                                                foreach ($castOptions as $opt) {
+                                                    $sel = ($selectedCast === $opt) ? 'selected' : '';
+                                                    echo "<option value=\"" . htmlspecialchars($opt) . "\" $sel>" . htmlspecialchars($opt) . "</option>";
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-12">
                                             <label class="form-label-custom">Aadhaar Card Number *</label>
                                             <div style="position:relative;">
                                                 <?php
@@ -716,6 +733,9 @@ if ($isLoggedIn && $conn) {
                                             </div>
                                             <small id="aadhaar_msg" style="display:none; font-weight:600; margin-top:-12px; margin-bottom:14px;"></small>
                                         </div>
+                                    </div>
+
+                                    <div class="row">
                                         <div class="col-sm-6 col-xs-12">
                                             <label class="form-label-custom">Additional Mobile Number</label>
                                             <div style="position:relative;">

@@ -29,6 +29,7 @@ if ($step === 1) {
     $dob = trim($_POST['dob'] ?? '');
     $gender = trim($_POST['gender'] ?? '');
     $maritalStatus = trim($_POST['maritalstatus'] ?? '');
+    $cast = trim($_POST['cast'] ?? '');
     $aadhaar = trim($_POST['aadhaar_number'] ?? '');
     $additionalMobile = trim($_POST['additional_mobile'] ?? '');
 
@@ -130,6 +131,7 @@ if ($step === 1) {
     $ageEsc = mysqli_real_escape_string($conn, $age);
     $genderEsc = mysqli_real_escape_string($conn, $gender);
     $maritalEsc = mysqli_real_escape_string($conn, $maritalStatus);
+    $castEsc = mysqli_real_escape_string($conn, $cast);
     $aadhaarEsc = mysqli_real_escape_string($conn, $cleanAadhaar);
     $addMobileEsc = mysqli_real_escape_string($conn, $cleanAddMobile);
 
@@ -143,6 +145,7 @@ if ($step === 1) {
         age = '$ageEsc',
         gender = '$genderEsc',
         maritalstatus = '$maritalEsc',
+        `cast` = '$castEsc',
         aadhaar_number = '$aadhaarEsc',
         additional_mobile = '$addMobileEsc'
         $profilePicSql,

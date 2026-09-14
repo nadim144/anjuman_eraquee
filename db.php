@@ -108,6 +108,7 @@ if (!function_exists('run_db_migrations')) {
             'is_temp_password' => "ALTER TABLE `user_registrtion` ADD COLUMN `is_temp_password` TINYINT(1) DEFAULT 0",
             'reset_requested' => "ALTER TABLE `user_registrtion` ADD COLUMN `reset_requested` TINYINT(1) DEFAULT 0",
             'profile_picture' => "ALTER TABLE `user_registrtion` ADD COLUMN `profile_picture` VARCHAR(255) NULL AFTER `username`",
+            'cast' => "ALTER TABLE `user_registrtion` ADD COLUMN `cast` VARCHAR(100) NULL AFTER `maritalstatus`",
             'aadhaar_number' => "ALTER TABLE `user_registrtion` ADD COLUMN `aadhaar_number` VARCHAR(20) NULL AFTER `dob`",
             'additional_mobile' => "ALTER TABLE `user_registrtion` ADD COLUMN `additional_mobile` VARCHAR(20) NULL AFTER `phonenumber`",
             'certificate_path' => "ALTER TABLE `user_registrtion` ADD COLUMN `certificate_path` VARCHAR(255) NULL",
