@@ -1,0 +1,6 @@
+uploads/*
+!uploads/.gitkeep
+!uploads/*/.gitkeep
+htdocs/
+
+

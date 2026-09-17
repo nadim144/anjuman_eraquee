@@ -248,7 +248,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="form-group" style="margin-bottom: 28px;">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter password (Admin)" required>
+                    <div style="position: relative;">
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Enter password (Admin)" required style="padding-right: 42px;">
+                        <button type="button" onclick="togglePasswordVisibility('password', 'admin_pass_eye')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #64748b; font-size: 15px; padding: 4px;">
+                            <i id="admin_pass_eye" class="fa fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn-primary" style="width: 100%; padding: 12px; font-size: 16px; border-radius: 4px; border: none; cursor: pointer;">Log In to Dashboard</button>
@@ -264,6 +269,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/jquery.meanmenu.js"></script>
     <script>
+        function togglePasswordVisibility(fieldId, iconId) {
+            var input = document.getElementById(fieldId);
+            var icon = document.getElementById(iconId);
+            if (!input) return;
+            if (input.type === 'password') {
+                input.type = 'text';
+                if (icon) icon.className = 'fa fa-eye-slash';
+            } else {
+                input.type = 'password';
+                if (icon) icon.className = 'fa fa-eye';
+            }
+        }
+
         jQuery(document).ready(function($) {
             if ($('nav#dropdown').length) {
                 $('nav#dropdown').meanmenu();

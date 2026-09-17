@@ -112,7 +112,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv' && $conn) {
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename=anjuman_members_' . date('Y-m-d') . '.csv');
     $output = fopen('php://output', 'w');
-    fputcsv($output, ['ID', 'Name', 'Father Name', 'Mother Name', 'DOB', 'Age', 'Native Place', 'Gender', 'Marital Status', 'Email', 'Phone', 'WhatsApp', 'District', 'State', 'Qualification', 'Occupation', 'Registered Date']);
+    fputcsv($output, ['ID', 'Name', 'Father Name', 'Mother Name', 'DOB', 'Age', 'Gender', 'Marital Status', 'Cast', 'Aadhaar Number', 'Native Place', 'Email', 'Phone', 'Additional Mobile', 'WhatsApp', 'District', 'State', 'Qualification', 'Occupation', 'Registered Date']);
     
     $res = mysqli_query($conn, "SELECT * FROM user_registrtion ORDER BY id DESC");
     if ($res) {
@@ -124,11 +124,14 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv' && $conn) {
                 $row['mothername'] ?? '',
                 $row['dob'] ?? '',
                 $row['age'] ?? '',
-                $row['nativeplace'] ?? '',
                 $row['gender'] ?? '',
                 $row['maritalstatus'] ?? '',
+                $row['cast'] ?? '',
+                $row['aadhaar_number'] ?? '',
+                $row['nativeplace'] ?? '',
                 $row['email'] ?? '',
                 $row['phonenumber'] ?? '',
+                $row['additional_mobile'] ?? '',
                 $row['whatsappnumber'] ?? '',
                 $row['presentdistrict'] ?? '',
                 $row['presentstate'] ?? '',
@@ -605,7 +608,10 @@ function viewMember(m) {
         ['Age', (m.age ? m.age + ' yrs' : '-')],
         ['Gender', m.gender || '-'],
         ['Marital Status', m.maritalstatus || '-'],
+        ['Cast', m.cast || '-'],
+        ['Aadhaar Number', m.aadhaar_number || '-'],
         ['Phone Number', m.phonenumber || '-'],
+        ['Additional Mobile', m.additional_mobile || '-'],
         ['WhatsApp Number', m.whatsappnumber || '-'],
         ['Email Address', m.email || '-'],
         ['Native Place', m.nativeplace || '-'],
