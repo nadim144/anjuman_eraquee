@@ -72,6 +72,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <li><a href="index.php">📊 Dashboard</a></li>
                 <li class="active"><a href="settings.php">⚙️ Site Settings & Phones</a></li>
                 <li><a href="members.php">👥 Registered Members</a></li>
+                <?php if (is_super_admin()): ?>
+                    <li><a href="admins.php">🛡️ Manage Admins</a></li>
+                <?php endif; ?>
                 <li><a href="../index.html" target="_blank">🌐 View Live Website</a></li>
             </ul>
             <div class="admin-nav-footer">
@@ -84,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <header class="admin-topbar">
                 <h1>Manage Site Content & Settings</h1>
                 <div class="admin-user-info">
-                    <span class="badge-user">Super Admin</span>
+                    <span class="badge-user"><?php echo is_super_admin() ? '👑 Super Admin' : '🛡️ Admin'; ?>: <?php echo htmlspecialchars($_SESSION['admin_name'] ?? 'Admin'); ?></span>
                     <a href="logout.php" style="color: #ef4444; text-decoration: none; font-size: 14px; font-weight: 600;">Logout</a>
                 </div>
             </header>

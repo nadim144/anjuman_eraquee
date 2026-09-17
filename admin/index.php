@@ -26,6 +26,7 @@ if (file_exists($settingsFile)) {
 // Check database connection & count members
 $totalMembers = 0;
 $totalResetRequests = 0;
+$totalAdmins = 0;
 $dbConnected = false;
 $recentMembers = [];
 
@@ -37,6 +38,12 @@ if ($conn) {
     if ($res && $row = mysqli_fetch_assoc($res)) {
         $totalMembers = intval($row['cnt']);
         $totalResetRequests = intval($row['reset_cnt']);
+    }
+    if (is_super_admin()) {
+        $aCntRes = @mysqli_query($conn, "SELECT COUNT(*) as acnt FROM admin_users WHERE status = 'active'");
+        if ($aCntRes && $ar = mysqli_fetch_assoc($aCntRes)) {
+            $totalAdmins = intval($ar['acnt']);
+        }
     }
     $recentRes = @mysqli_query($conn, "SELECT username, email, phonenumber, presentdistrict, created_at FROM user_registrtion ORDER BY id DESC LIMIT 5");
     if ($recentRes) {
@@ -66,6 +73,9 @@ if ($conn) {
                 <li class="active"><a href="index.php">📊 Dashboard</a></li>
                 <li><a href="settings.php">⚙️ Site Settings & Phones</a></li>
                 <li><a href="members.php">👥 Registered Members</a></li>
+                <?php if (is_super_admin()): ?>
+                    <li><a href="admins.php">🛡️ Manage Admins</a></li>
+                <?php endif; ?>
                 <li><a href="../index.html" target="_blank">🌐 View Live Website</a></li>
             </ul>
             <div class="admin-nav-footer">
@@ -78,12 +88,18 @@ if ($conn) {
             <header class="admin-topbar">
                 <h1>Dashboard Overview</h1>
                 <div class="admin-user-info">
-                    <span class="badge-user">Logged in as: Super Admin</span>
+                    <span class="badge-user"><?php echo is_super_admin() ? '👑 Super Admin' : '🛡️ Admin'; ?>: <?php echo htmlspecialchars($_SESSION['admin_name'] ?? 'Admin'); ?></span>
                     <a href="logout.php" style="color: #ef4444; text-decoration: none; font-size: 14px; font-weight: 600;">Logout</a>
                 </div>
             </header>
 
             <div class="admin-content">
+                <?php if (isset($_GET['error']) && $_GET['error'] === 'unauthorized'): ?>
+                    <div class="alert alert-danger" style="padding: 12px 18px; border-radius: 6px; margin-bottom: 24px; font-size: 14px; background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b;">
+                        ⚠️ <strong>Access Denied:</strong> Only the Super Administrator has permission to access that section.
+                    </div>
+                <?php endif; ?>
+
                 <!-- Stats Grid -->
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -93,6 +109,15 @@ if ($conn) {
                             <a href="members.php" style="color: #009146; text-decoration: none; font-weight: 600;">View Directory &rarr;</a>
                         </div>
                     </div>
+                    <?php if (is_super_admin()): ?>
+                    <div class="stat-card">
+                        <div class="label">Active Administrators</div>
+                        <div class="value" style="color: #0284c7;"><?php echo number_format($totalAdmins); ?></div>
+                        <div style="font-size: 13px; color: #64748b; margin-top: 4px;">
+                            <a href="admins.php" style="color: #0284c7; text-decoration: none; font-weight: 600;">Manage Admins &rarr;</a>
+                        </div>
+                    </div>
+                    <?php endif; ?>
 
                     <div class="stat-card">
                         <div class="label">Password Reset Requests</div>

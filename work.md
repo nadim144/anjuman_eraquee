@@ -286,5 +286,12 @@ ALTER TABLE `user_registrtion` ADD COLUMN `cast` VARCHAR(100) NULL AFTER `marita
 - [x] Improve **Member Dashboard Mobile Header & Buttons**: Prevented "Member Dashboard" from wrapping awkwardly on mobile, unified Logout button design with Home button using clean inline-flex pills and responsive typography.
 - [x] Render **Circular Profile Picture** on the left-hand side of Certificate before "ANJUMAN ERAQUEE INDIA".
 - [x] Enable **Persistent Server & Database Storage** for generated membership certificates.
+- [x] Implement **Database-Backed Role-Based Access Control (RBAC)** in Admin Portal:
+  - Created dedicated `admin_users` table with auto-migration in `db.php`.
+  - Replaced hardcoded credentials in `admin/login.php` with dynamic credentials backed by `admin_users` JOIN `user_registrtion` (members log in using registered email/phone + password).
+  - Defined roles: `super_admin` (exclusive rights to promote, demote, and deactivate admins) and `admin` (management of community members and site content).
+  - Seeded primary Super Admin (`ahmad.nadim144@gmail.com`, Member ID 3).
+  - Built dedicated Super Admin Console (`admin/admins.php`) with safety locks preventing deletion/demotion of primary Super Admin.
+  - Added direct `[ ⭐️ Make Admin ]` and `[ 🚫 Remove Admin ]` actions inside Member Directory (`admin/members.php`).
 - [ ] Connect real SMS Gateway API (Fast2SMS / Twilio) using API Key for real-time mobile SMS delivery.
 - [ ] Upload updated files to **InfinityFree** hosting via FileZilla.

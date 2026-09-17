@@ -128,6 +128,35 @@ if (!function_exists('run_db_migrations')) {
             }
         }
 
+        // Automated creation of admin_users table for Role-Based Access Control (RBAC)
+        $createAdminTableSql = "CREATE TABLE IF NOT EXISTS `admin_users` (
+          `id` int(11) NOT NULL AUTO_INCREMENT,
+          `user_id` int(11) NOT NULL,
+          `role` enum('super_admin','admin') NOT NULL DEFAULT 'admin',
+          `status` enum('active','inactive') NOT NULL DEFAULT 'active',
+          `created_by` int(11) DEFAULT NULL,
+          `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          `last_login` datetime DEFAULT NULL,
+          PRIMARY KEY (`id`),
+          UNIQUE KEY `uniq_admin_user` (`user_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+        @mysqli_query($conn, $createAdminTableSql);
+
+        // Ensure primary Super Admin (ahmad.nadim144@gmail.com) is designated as super_admin
+        $superEmail = 'ahmad.nadim144@gmail.com';
+        $userCheck = @mysqli_query($conn, "SELECT id FROM `user_registrtion` WHERE `email` = '$superEmail' LIMIT 1");
+        if ($userCheck && $uRow = mysqli_fetch_assoc($userCheck)) {
+            $superUserId = intval($uRow['id']);
+            $adminCheck = @mysqli_query($conn, "SELECT id, role FROM `admin_users` WHERE `user_id` = $superUserId LIMIT 1");
+            if ($adminCheck && mysqli_num_rows($adminCheck) === 0) {
+                @mysqli_query($conn, "INSERT INTO `admin_users` (`user_id`, `role`, `status`) VALUES ($superUserId, 'super_admin', 'active')");
+            } else if ($adminCheck && $aRow = mysqli_fetch_assoc($adminCheck)) {
+                if ($aRow['role'] !== 'super_admin') {
+                    @mysqli_query($conn, "UPDATE `admin_users` SET `role` = 'super_admin', `status` = 'active' WHERE `id` = " . intval($aRow['id']));
+                }
+            }
+        }
+
         $migrated = true;
     }
 }

@@ -6,20 +6,73 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
     exit;
 }
 
+require_once __DIR__ . '/../db.php';
+$conn = get_db_connection();
+
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = trim($_POST['username'] ?? '');
-    $password = trim($_POST['password'] ?? '');
+    $loginInput = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-    // Default requested credentials: Admin / Admin
-    if ($username === 'Admin' && $password === 'Admin') {
-        $_SESSION['admin_logged_in'] = true;
-        $_SESSION['admin_user'] = 'Admin';
-        header('Location: index.php');
-        exit;
+    if (empty($loginInput) || empty($password)) {
+        $error = 'Please enter both your Email/Mobile Number and Password.';
+    } else if (!$conn) {
+        $error = 'Database connection error. Please try again later.';
     } else {
-        $error = 'Invalid Username or Password. Please try again.';
+        $loginEsc = mysqli_real_escape_string($conn, $loginInput);
+        $cleanPhone = preg_replace('/[^0-9]/', '', $loginInput);
+        $cleanEsc = !empty($cleanPhone) ? mysqli_real_escape_string($conn, $cleanPhone) : '';
+        $wherePhone = !empty($cleanEsc) ? "OR u.phonenumber LIKE '%$cleanEsc%'" : "";
+
+        // Query admin_users joined with member record
+        $sql = "SELECT a.id AS admin_id, a.user_id, a.role, a.status AS admin_status, 
+                       u.username, u.email, u.phonenumber, u.password 
+                FROM admin_users a
+                JOIN user_registrtion u ON a.user_id = u.id
+                WHERE (u.email = '$loginEsc' OR u.phonenumber = '$loginEsc' $wherePhone)
+                LIMIT 1";
+        $res = mysqli_query($conn, $sql);
+
+        if ($res && mysqli_num_rows($res) > 0) {
+            $admin = mysqli_fetch_assoc($res);
+
+            if ($admin['admin_status'] !== 'active') {
+                $error = 'Your Administrator account is suspended. Please contact the Super Admin.';
+            } else {
+                $isValid = false;
+                if (!empty($admin['password'])) {
+                    if (password_verify($password, $admin['password']) || $admin['password'] === $password) {
+                        $isValid = true;
+                    }
+                }
+
+                if ($isValid) {
+                    $_SESSION['admin_logged_in'] = true;
+                    $_SESSION['admin_id'] = $admin['admin_id'];
+                    $_SESSION['admin_user_id'] = $admin['user_id'];
+                    $_SESSION['admin_name'] = $admin['username'];
+                    $_SESSION['admin_email'] = $admin['email'];
+                    $_SESSION['admin_phone'] = $admin['phonenumber'];
+                    $_SESSION['admin_role'] = $admin['role']; // 'super_admin' or 'admin'
+
+                    @mysqli_query($conn, "UPDATE admin_users SET last_login = NOW() WHERE id = " . intval($admin['admin_id']));
+
+                    header('Location: index.php');
+                    exit;
+                } else {
+                    $error = 'Invalid password. Please check your credentials and try again.';
+                }
+            }
+        } else {
+            // Check if user is a member but not an admin
+            $memCheck = mysqli_query($conn, "SELECT id FROM user_registrtion WHERE email = '$loginEsc' OR phonenumber = '$loginEsc' $wherePhone LIMIT 1");
+            if ($memCheck && mysqli_num_rows($memCheck) > 0) {
+                $error = 'This account does not have Administrator privileges. Please contact the Super Admin.';
+            } else {
+                $error = 'No administrator account found with these credentials.';
+            }
+        }
     }
 }
 ?>
@@ -233,7 +286,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <img src="../images/logo/logo.png" alt="Anjuman Eraquee INDIA" class="login-logo">
                 </a>
                 <h2>Anjuman <span style="color: #38bdf8;">Eraquee</span></h2>
-                <p>Super Admin Panel Login</p>
+                <p>Administrator Portal Login</p>
             </div>
 
             <?php if (!empty($error)): ?>
@@ -242,14 +295,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <form method="POST" action="login.php">
                 <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" class="form-control" placeholder="Enter username (Admin)" required autofocus>
+                    <label for="username">Email or Mobile Number</label>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Enter registered Email or Mobile" required autofocus>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 28px;">
                     <label for="password">Password</label>
                     <div style="position: relative;">
-                        <input type="password" id="password" name="password" class="form-control" placeholder="Enter password (Admin)" required style="padding-right: 42px;">
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required style="padding-right: 42px;">
                         <button type="button" onclick="togglePasswordVisibility('password', 'admin_pass_eye')" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #64748b; font-size: 15px; padding: 4px;">
                             <i id="admin_pass_eye" class="fa fa-eye"></i>
                         </button>
