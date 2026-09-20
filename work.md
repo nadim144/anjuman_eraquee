@@ -293,5 +293,16 @@ ALTER TABLE `user_registrtion` ADD COLUMN `cast` VARCHAR(100) NULL AFTER `marita
   - Seeded primary Super Admin (`ahmad.nadim144@gmail.com`, Member ID 3).
   - Built dedicated Super Admin Console (`admin/admins.php`) with safety locks preventing deletion/demotion of primary Super Admin.
   - Added direct `[ ⭐️ Make Admin ]` and `[ 🚫 Remove Admin ]` actions inside Member Directory (`admin/members.php`).
+- [x] Establish Comprehensive **Architecture Documentation Suite** (`Architecture/`):
+  - Created 9 industry-standard architectural documents inspired by modern AI-assisted engineering frameworks:
+    - `PRD.md` — Product Requirements Document (Goals, Personas, Features, KPIs, Roadmap)
+    - `ARCHITECTURE.md` — System Architecture (Tech Stack, Folder Tree, Data Flows, DB Schemas)
+    - `DESIGN.md` — Design System (Tokens, Color Palette, Typography, Components, Responsive Breakpoints)
+    - `RULES.md` — Engineering Guidelines (Coding Standards, Defensive SQL, XSS Prevention, Git Rules)
+    - `TASKS.md` — Task Breakdown & Development Plan (35 Tracked Tasks across 8 Phases)
+    - `TEST_PLAN.md` — QA & Testing Strategy (Test Cases for Auth, Reg, Certs, RBAC, Usability)
+    - `SECURITY.md` — Threat Modeling, RBAC Enforcement & Hardening Guide
+    - `DECISIONS.md` — Architecture Decision Records (ADRs 001 through 008)
+    - `MEMORY.md` — Living Context, Quick Reference & AI Assistant Guide
 - [ ] Connect real SMS Gateway API (Fast2SMS / Twilio) using API Key for real-time mobile SMS delivery.
 - [ ] Upload updated files to **InfinityFree** hosting via FileZilla.
