@@ -193,6 +193,7 @@ if ($conn && isset($_SESSION['user_id'])) {
             </div>
             <div class="header-actions">
                 <a href="index.html" class="btn-dash-nav"><i class="fa fa-home" style="color:#009146;"></i> Home</a>
+                <a href="matrimonial-manage.php" class="btn-dash-nav"><i class="fa fa-heart" style="color:#db2777;"></i> Matrimonial</a>
                 <a href="user-logout.php" class="btn-dash-nav btn-logout"><i class="fa fa-sign-out"></i> Logout</a>
             </div>
         </div>
@@ -220,6 +221,34 @@ if ($conn && isset($_SESSION['user_id'])) {
         </div>
     <?php else: ?>
 
+        <?php
+        $myMatrimonyCount = 0;
+        $pendingInterestsCount = 0;
+        if ($conn && isset($userData['id'])) {
+            $uid = intval($userData['id']);
+            $mCntRes = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM matrimonial_profiles WHERE created_by_user_id = $uid");
+            if ($mCntRes && $mc = mysqli_fetch_assoc($mCntRes)) {
+                $myMatrimonyCount = intval($mc['cnt']);
+            }
+            $intRes = mysqli_query($conn, "SELECT COUNT(*) as cnt FROM matrimonial_interests WHERE receiver_user_id = $uid AND status = 'pending'");
+            if ($intRes && $ic = mysqli_fetch_assoc($intRes)) {
+                $pendingInterestsCount = intval($ic['cnt']);
+            }
+        }
+        ?>
+
+        <?php if ($pendingInterestsCount > 0): ?>
+            <div class="alert alert-info mb-4" style="background:#fdf2f8; border:1.5px solid #f472b6; color:#9d174d; border-radius:8px; font-weight:600; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                <div>
+                    <i class="fa fa-heart" style="font-size:18px; color:#db2777;"></i>
+                    You have <strong><?php echo $pendingInterestsCount; ?> new proposal interest(s)</strong> received from Eraquee families!
+                </div>
+                <a href="matrimonial-manage.php" class="btn btn-sm btn-danger" style="background:#db2777; border:none; font-weight:700; border-radius:20px; padding:6px 16px;">
+                    Review Interests
+                </a>
+            </div>
+        <?php endif; ?>
+
         <!-- Welcome Banner -->
         <div class="alert alert-success d-flex justify-content-between align-items-center mb-4 flex-wrap" style="gap: 15px;">
             <div style="display: flex; align-items: center; gap: 15px;">
@@ -240,6 +269,29 @@ if ($conn && isset($_SESSION['user_id'])) {
                 </a>
                 <a href="download-certificate.php" class="btn btn-light font-weight-bold" style="color: #009146; box-shadow: 0 2px 6px rgba(0,0,0,0.1); padding: 8px 16px;">
                     <i class="fa fa-file-pdf-o text-danger"></i> Download Membership Certificate (PDF)
+                </a>
+            </div>
+        </div>
+
+        <!-- Matrimonial Center Spotlight Banner -->
+        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border: 1.5px solid #86efac; border-radius: 10px; padding: 20px 24px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; box-shadow: 0 4px 12px rgba(0, 145, 70, 0.05);">
+            <div>
+                <h4 style="margin: 0 0 5px; color: #009146; font-weight: 800; font-size: 18px;">
+                    💍 Community Matrimonial Center
+                </h4>
+                <p style="margin: 0; color: #475569; font-size: 13px;">
+                    Create and manage matrimonial biodatas for yourself, your son, daughter, brother, sister, or relative with multi-tiered privacy protection.
+                </p>
+            </div>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <a href="matrimonial.php" class="btn btn-default" style="font-weight: 700; border-radius: 6px; font-size: 13px; padding: 8px 14px;">
+                    🔍 Browse Alliances
+                </a>
+                <a href="matrimonial-manage.php" class="btn btn-success" style="background: #009146; border: none; font-weight: 700; border-radius: 6px; font-size: 13px; padding: 8px 16px;">
+                    My Matrimonial Hub (<?php echo $myMatrimonyCount; ?>)
+                </a>
+                <a href="matrimonial-create.php" class="btn btn-warning" style="background: #e5ae49; color: #0f172a; border: none; font-weight: 700; border-radius: 6px; font-size: 13px; padding: 8px 16px;">
+                    <i class="fa fa-plus-circle"></i> Create Profile
                 </a>
             </div>
         </div>

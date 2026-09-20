@@ -251,6 +251,7 @@ if ($conn) {
                 <li><a href="index.php">📊 Dashboard</a></li>
                 <li><a href="settings.php">⚙️ Site Settings & Phones</a></li>
                 <li><a href="members.php">👥 Registered Members</a></li>
+                <li><a href="matrimonial.php">💍 Matrimonial</a></li>
                 <li class="active"><a href="admins.php">🛡️ Manage Admins</a></li>
                 <li><a href="../index.html" target="_blank">🌐 View Live Website</a></li>
             </ul>

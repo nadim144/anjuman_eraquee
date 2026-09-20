@@ -33,19 +33,20 @@ flowchart TD
         AuthModule["Auth & Session Guard (admin/auth.php, user-login.php)"]
         RegModule["Registration Wizard (registration.php, registerdata.php)"]
         CertEngine["PDF Generation Engine (fpdf/, download-certificate.php)"]
-        AdminModule["RBAC Admin Console (admin/index.php, admins.php, members.php)"]
+        AdminModule["RBAC Admin Console (admin/index.php, admins.php, members.php, matrimonial.php)"]
+        MatrimonialModule["Matrimonial System (matrimonial.php, matrimonial-create.php, matrimonial-manage.php, matrimonial-profile-view.php)"]
         APILayer["Settings API (api/settings.php)"]
     end
 
     subgraph DataTier["Data & Storage Tier"]
-        DB[(MySQL Database: user_registrtion & admin_users)]
+        DB[(MySQL Database: user_registrtion, admin_users, matrimonial_profiles, matrimonial_photos, matrimonial_interests, matrimonial_access_requests)]
         JSONStore[("File Store: data/settings.json")]
-        FileStorage[("Media Storage: uploads/profile_pictures, uploads/certificates")]
+        FileStorage[("Media Storage: uploads/profile_pictures, uploads/certificates, uploads/matrimonial")]
     end
 
-    Guest -->|Browse Pages| Router
-    Member -->|Login / Dashboard / Certificate| Router
-    Admin -->|Manage Members / Site Settings| Router
+    Guest -->|Browse Pages & Directory| Router
+    Member -->|Login / Dashboard / Certificate / Matrimonial| Router
+    Admin -->|Manage Members / Settings / Matrimonial Moderation| Router
 
     Router --> StaticAssets
     Router --> AppLayer
@@ -60,6 +61,8 @@ flowchart TD
     CertEngine --> FileStorage
     AdminModule --> DB
     AdminModule --> JSONStore
+    MatrimonialModule --> DB
+    MatrimonialModule --> FileStorage
 ```
 
 ---
@@ -101,6 +104,7 @@ c:\xampp\htdocs\anjuman_eraquee/
 │   ├── index.php                   # Administrative Dashboard & Overview Stats
 │   ├── login.php                   # Dynamic Member-Credential Admin Login
 │   ├── logout.php                  # Admin Session Termination
+│   ├── matrimonial.php            # Matrimonial Moderation Console & Contact Request Review
 │   ├── members.php                 # Registered Member Directory, CRUD, CSV Export
 │   ├── settings.php                # Site Content & Contact Phone Editor
 │   └── css/                        # Dedicated Admin Panel Stylesheet
@@ -120,11 +124,16 @@ c:\xampp\htdocs\anjuman_eraquee/
 │   └── site-settings.js            # Dynamic Topbar/Footer Phone Number Injector
 ├── uploads/                        # Dynamic User Media & Artifact Storage
 │   ├── certificates/               # Cached Persistent PDF Membership Certificates
+│   ├── matrimonial/                # Matrimonial Candidate Photographs
 │   └── profile_pictures/           # Member Profile Photos
 ├── db.php                          # Central DB Connection & Non-Destructive Auto-Migrator
 ├── db_config.php                   # Optional Local/Remote DB Overrides (Not Committed)
 ├── download-certificate.php        # Dynamic PDF Certificate Generator Controller
 ├── index.html                      # Homepage (17 Total HTML Marketing Pages)
+├── matrimonial.php                 # Matrimonial Directory & Search Portal (Tier 1 & 2 Enforced)
+├── matrimonial-create.php          # Candidate Profile Creation Wizard (Self / Family)
+├── matrimonial-manage.php          # Member Matrimonial Hub (Profiles, Proposals, Unlocked Contacts)
+├── matrimonial-profile-view.php    # Candidate Biodata View (Tier 1/2/3 Reveal & Modals)
 ├── registration.php                # Multi-Step Member Registration Wizard
 ├── registerdata.php                # Legacy/Direct Member Registration Processor
 ├── user-dashboard.php              # Member Self-Service Dashboard & Profile Editor
@@ -266,6 +275,90 @@ The database consists of two core tables designed with relational integrity:
 | `created_by` | `INT(11)` | YES | `NULL` | Admin ID of the promoter who granted admin rights |
 | `created_at` | `TIMESTAMP` | NO | `CURRENT_TIMESTAMP` | Timestamp when promoted to admin |
 | `last_login` | `DATETIME` | YES | `NULL` | Timestamp of last successful administrative login |
+
+---
+
+### 3. Table: `matrimonial_profiles` (Candidate Biodatas)
+| Column | Type | Nullable | Default | Description |
+| :--- | :--- | :---: | :---: | :--- |
+| `id` | `INT(11)` | NO | `AUTO_INCREMENT` | Primary Key, Profile ID |
+| `profile_code` | `VARCHAR(50)` | YES | `NULL` | Unique code (e.g., `ERQ-G-0001`, `ERQ-B-0002`) |
+| `created_by_user_id` | `INT(11)` | NO | `None` | Foreign Key to `user_registrtion(id)` (Managing Member) |
+| `profile_for` | `ENUM(...)` | NO | `'self'` | Relationship (`self`, `son`, `daughter`, `brother`, `sister`, `relative`) |
+| `gender` | `ENUM('male','female')` | NO | `None` | Candidate gender |
+| `full_name` | `VARCHAR(255)` | NO | `None` | Candidate full legal name |
+| `dob` | `DATE` | YES | `NULL` | Date of Birth |
+| `age` | `INT(11)` | YES | `NULL` | Candidate age in years |
+| `height` | `VARCHAR(50)` | YES | `NULL` | Height (e.g., `5 ft 8 in`) |
+| `marital_status` | `ENUM(...)` | NO | `'unmarried'` | `unmarried`, `divorced` (Talaq Shuda), `khula_shuda`, `widowed` (Bewa) |
+| `cast` | `VARCHAR(100)` | YES | `NULL` | Caste denomination (`Eraquee(Iraqi)`, etc.) |
+| `complexion` | `VARCHAR(50)` | YES | `NULL` | Complexion description |
+| `physical_status`| `VARCHAR(100)` | YES | `'Normal'` | Physical disability / status |
+| `qualification` | `VARCHAR(255)` | YES | `NULL` | Highest educational degree |
+| `occupation` | `VARCHAR(255)` | YES | `NULL` | Profession / Job title |
+| `employed_in` | `VARCHAR(100)` | YES | `NULL` | Private, Government, Business, Self-Employed |
+| `annual_income` | `VARCHAR(100)` | YES | `NULL` | Income bracket |
+| `father_name` | `VARCHAR(255)` | YES | `NULL` | Father's name |
+| `father_occupation`| `VARCHAR(255)`| YES | `NULL` | Father's occupation |
+| `mother_name` | `VARCHAR(255)` | YES | `NULL` | Mother's name |
+| `brothers_count`| `INT(11)` | YES | `0` | Number of brothers |
+| `sisters_count` | `INT(11)` | YES | `0` | Number of sisters |
+| `family_type` | `VARCHAR(50)` | YES | `'Nuclear'` | Nuclear / Joint family |
+| `family_values` | `VARCHAR(50)` | YES | `'Moderate'` | Orthodox, Traditional, Moderate, Liberal |
+| `native_place` | `VARCHAR(255)` | YES | `NULL` | Ancestral village / city |
+| `present_city` | `VARCHAR(100)` | YES | `NULL` | Current residential city |
+| `present_state` | `VARCHAR(100)` | YES | `NULL` | Current residential state |
+| `about_candidate`| `TEXT` | YES | `NULL` | Personal bio & hobbies |
+| `partner_expectations`| `TEXT` | YES | `NULL` | Expectations from spouse |
+| `contact_person_name`| `VARCHAR(255)`| YES | `NULL` | Guardian / Contact person |
+| `contact_relation`| `VARCHAR(100)` | YES | `'Self'` | Relation to candidate |
+| `contact_phone` | `VARCHAR(50)` | YES | `NULL` | Primary guardian contact (Tier 3 protected) |
+| `contact_whatsapp`| `VARCHAR(50)` | YES | `NULL` | WhatsApp number (Tier 3 protected) |
+| `contact_address`| `TEXT` | YES | `NULL` | Full residential address (Tier 3 protected) |
+| `photo_privacy` | `ENUM(...)` | YES | `'reciprocal_only'` | `visible_all`, `reciprocal_only`, `request_only` |
+| `status` | `ENUM(...)` | YES | `'active'` | `active`, `paused`, `married`, `deleted` |
+| `created_at` | `TIMESTAMP` | NO | `CURRENT_TIMESTAMP` | Profile creation timestamp |
+
+---
+
+### 4. Table: `matrimonial_photos` (Candidate Gallery)
+| Column | Type | Nullable | Default | Description |
+| :--- | :--- | :---: | :---: | :--- |
+| `id` | `INT(11)` | NO | `AUTO_INCREMENT` | Primary Key, Photo ID |
+| `profile_id` | `INT(11)` | NO | `None` | Foreign Key to `matrimonial_profiles(id)` |
+| `photo_path` | `VARCHAR(255)` | NO | `None` | Relative path in `uploads/matrimonial/` |
+| `is_primary` | `TINYINT(1)` | YES | `1` | Flag: 1 if hero photograph |
+| `created_at` | `TIMESTAMP` | NO | `CURRENT_TIMESTAMP` | Upload timestamp |
+
+---
+
+### 5. Table: `matrimonial_interests` (Proposal Exchange)
+| Column | Type | Nullable | Default | Description |
+| :--- | :--- | :---: | :---: | :--- |
+| `id` | `INT(11)` | NO | `AUTO_INCREMENT` | Primary Key, Interest ID |
+| `sender_user_id` | `INT(11)` | NO | `None` | Foreign Key to `user_registrtion(id)` (Sender Member) |
+| `sender_profile_id`| `INT(11)` | NO | `None` | Foreign Key to `matrimonial_profiles(id)` |
+| `receiver_user_id`| `INT(11)` | NO | `None` | Foreign Key to `user_registrtion(id)` (Receiver Member) |
+| `receiver_profile_id`| `INT(11)` | NO | `None` | Foreign Key to `matrimonial_profiles(id)` |
+| `message` | `VARCHAR(255)` | YES | `NULL` | Optional greeting / proposal message |
+| `status` | `ENUM(...)` | NO | `'pending'` | `pending`, `accepted`, `declined`, `withdrawn` |
+| `created_at` | `TIMESTAMP` | NO | `CURRENT_TIMESTAMP` | Proposal submission timestamp |
+| `responded_at` | `DATETIME` | YES | `NULL` | Timestamp of acceptance or decline |
+
+---
+
+### 6. Table: `matrimonial_access_requests` (Tier 3 Admin Contact Approval)
+| Column | Type | Nullable | Default | Description |
+| :--- | :--- | :---: | :---: | :--- |
+| `id` | `INT(11)` | NO | `AUTO_INCREMENT` | Primary Key, Request ID |
+| `requester_user_id`| `INT(11)` | NO | `None` | Member requesting full contact info |
+| `target_profile_id`| `INT(11)` | NO | `None` | Target biodata candidate |
+| `requester_profile_id`| `INT(11)`| YES | `NULL` | Candidate profile represented by requester |
+| `status` | `ENUM(...)` | NO | `'pending'` | `pending`, `approved_by_admin`, `rejected_by_admin` |
+| `reviewed_by_admin_id`| `INT(11)`| YES | `NULL` | Admin ID who adjudicated request |
+| `admin_notes` | `VARCHAR(255)` | YES | `NULL` | Optional moderation notes |
+| `created_at` | `TIMESTAMP` | NO | `CURRENT_TIMESTAMP` | Request submission timestamp |
+| `reviewed_at` | `DATETIME` | YES | `NULL` | Admin decision timestamp |
 
 ---
 

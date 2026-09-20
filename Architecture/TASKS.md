@@ -4,13 +4,13 @@
 
 | Metadata | Details |
 | :--- | :--- |
-| **Document Version** | 1.0.0 |
+| **Document Version** | 1.2.0 |
 | **Date** | September 20, 2026 |
 | **Status** | Active / Sprint Tracking |
-| **Total Tracked Tasks** | 35 |
-| **Completed Tasks** | 29 (83%) |
-| **In Progress** | 2 (6%) |
-| **Pending / Planned** | 4 (11%) |
+| **Total Tracked Tasks** | 44 |
+| **Completed Tasks** | 39 (89%) |
+| **In Progress** | 1 (2%) |
+| **Pending / Planned** | 4 (9%) |
 
 ---
 
@@ -19,8 +19,8 @@
 ```
 ┌─────────────────┬─────────────────┬─────────────────┬─────────────────┐
 │   TOTAL TASKS   │    COMPLETED    │   IN PROGRESS   │   NOT STARTED   │
-│       35        │       29        │        2        │        4        │
-│                 │     [ 83% ]     │     [ 6% ]      │     [ 11% ]     │
+│       44        │       39        │        1        │        4        │
+│                 │     [ 89% ]     │     [ 2% ]      │     [ 9% ]      │
 └─────────────────┴─────────────────┴─────────────────┴─────────────────┘
 ```
 
@@ -103,7 +103,7 @@
 | :---: | :--- | :---: | :---: | :--- |
 | **6.1** | Automated PHP syntax linting across all modified endpoints | High | Completed | 0 syntax errors detected via `php -l` |
 | **6.2** | Comprehensive automated RBAC integration testing | High | Completed | Verified via `test_rbac.php` scratch test |
-| **6.3** | Create comprehensive 9-document Architecture suite | High | In Progress | Full engineering documentation in `Architecture/` |
+| **6.3** | Create comprehensive 9-document Architecture suite | High | Completed | Full engineering documentation in `Architecture/` |
 | **6.4** | Deploy updated files and database migrations to Live Host via FileZilla | High | In Progress | Uploading modified `admin/`, `db.php`, `work.md` |
 
 ---
@@ -119,11 +119,19 @@
 
 ---
 
-## Phase 8: Matrimonial & Community Expansion (Future)
-*Broaden community offerings with specialized portals.*
+## Phase 8: Kalal Eraquee Community Matrimonial System
+*End-to-end matrimonial platform with 3-tier privacy, reciprocal matchmaking, and proposals.*
 
 | # | Task Description | Priority | Status | Verification & Notes |
 | :---: | :--- | :---: | :---: | :--- |
-| **8.1** | Upgrade Matrimonial Intake (`matrimonialregistration.html`) to full DB backend | Medium | Not Started | Separate matrimonial registry table |
-| **8.2** | Implement private matrimonial biodata search with guardian approvals | Medium | Not Started | Privacy-first community matchmaking |
+| **8.1** | Schema migration for 4 matrimonial tables in `db.php` | High | Completed | `matrimonial_profiles`, `matrimonial_photos`, `matrimonial_interests`, `matrimonial_access_requests` |
+| **8.2** | Candidate profile creation wizard (`matrimonial-create.php`) | High | Completed | Supports Self, Son, Daughter, Brother, Sister, Relative; Talaq Shuda, Khula Shuda, Bewa statuses; auto-age & code generation |
+| **8.3** | Member Matrimonial Hub (`matrimonial-manage.php`) | High | Completed | 4-tab console: My Candidate Profiles, Received Interests (Accept/Decline), Sent Interests, and Unlocked Contacts |
+| **8.4** | Privacy-first matrimonial directory (`matrimonial.php`) | High | Completed | Filter by Dulha/Dulhan, Marital Status, Caste, City; enforces Tier 1 vs Tier 2 blur/lock; direct proposal CTA |
+| **8.5** | Candidate Biodata View (`matrimonial-profile-view.php`) | High | Completed | Tier 1/2/3 dynamic reveal, proposal modal, and guardian contact request modal |
+| **8.6** | Admin Matrimonial Moderation Console (`admin/matrimonial.php`) | High | Completed | 1-click Contact Access Request approval/rejection and candidate profile management |
+| **8.7** | End-to-end automated integration testing | High | Completed | Verified via `test_matrimonial.php` (profile codes, mutual interest, admin contact release) |
+| **8.8** | Candidate Profile Edit Wizard (`matrimonial-edit.php`) | High | Completed | Pre-populated inputs, photo replacement, security owner/admin checks |
+| **8.9** | Admin / Super Admin Profile Approval Workflow | High | Completed | `pending_approval` lifecycle, inline review bar on `matrimonial-profile-view.php`, and 3-tab approval console in `admin/matrimonial.php` |
+
 

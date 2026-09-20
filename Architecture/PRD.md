@@ -83,6 +83,17 @@ Historically, community organizations faced significant organizational bottlenec
 - **Member Directory (`admin/members.php`)**: Search by name/email/phone/district, filter password reset requests, export CSV, view full dossier modal, edit records, issue temp passwords, direct promote/demote action buttons.
 - **Dynamic Site Settings (`admin/settings.php`)**: Real-time editor for helpline phones, convenor contact, and live video feeds.
 
+### F. Community Matrimonial System
+- **Registered Member Constraint**: Only verified registered community members can create matrimonial profiles, browse the matchmaking directory, or submit proposals.
+- **Multi-Profile Management**: A registered member can create and manage candidate profiles for themselves (`self`) or for family members (`son`, `daughter`, `brother`, `sister`, `relative`).
+- **Inclusive Marital Status Options**: Unmarried (`unmarried`), Divorced / Talaq Shuda (`divorced`), Khula Shuda (`khula_shuda`), and Widowed / Bewa (`widowed`).
+- **3-Tier Privacy Framework**:
+  - *Tier 1 (Public / Registered Viewer without reciprocal candidate profile)*: Limited summary view; profile photo is strictly locked/blurred; surname, contact numbers, and home addresses are hidden.
+  - *Tier 2 (Reciprocal Candidate Match)*: Active candidate profiles of the opposite gender unlock 1 normal photograph, candidate first name, and detailed education/profession/family biodata.
+  - *Tier 3 (Admin-Verified Full Access)*: Members can request guardian contact details through the platform; once vetted and approved by an Administrator, direct contact phone numbers, WhatsApp, and complete home address are released.
+- **Bilateral Proposal & Interest Engine**: Members can send proposals ("❤️ Show Interest"); receiving families are alerted in their dashboard to "Accept" or "Decline"; acceptance establishes mutual interest.
+- **Admin Moderation & Governance (`admin/matrimonial.php`)**: Two-tab administrative console to inspect/approve contact release requests and toggle directory profile visibility.
+
 ---
 
 ## 6. Out of Scope (Current Phase)
@@ -90,7 +101,7 @@ Historically, community organizations faced significant organizational bottlenec
 - Payment Gateway integration for mandatory membership fees or donations.
 - Native Mobile App (iOS / Android) binaries.
 - Automated SMS OTP gateway via third-party providers (currently uses simulated OTP with password fallback).
-- Full Matrimonial automated matching engine (basic form intake exists, matchmaking algorithm deferred).
+- Real-time in-app instant chat messaging (communication occurs via approved WhatsApp / phone contact).
 
 ---
 
@@ -100,18 +111,19 @@ Historically, community organizations faced significant organizational bottlenec
 | :--- | :--- | :--- |
 | **Member Adoption** | 10,000+ members | SQL count on `user_registrtion` |
 | **Certificate Generation** | 100% success rate | Zero FPDF generation fatals, verified in `uploads/certificates/` |
-| **Page Load Speed** | < 2.5 seconds on 4G | Google Lighthouse Performance Audit |
+| **Matrimonial Matchmaking** | 1,000+ verified biodatas | SQL count on `matrimonial_profiles` |
 | **Administrative Security** | 0 unauthorized privilege escalations | RBAC session checks and access log audits |
 | **Mobile Usability** | 100% viewport compatibility | Chrome DevTools responsive simulation (320px - 1440px) |
 
 ---
 
-## 8. Future Scope & Product Roadmap
+## 8. Product Roadmap & Milestones
 
-1. **Phase 7**: Real SMS Gateway integration (Fast2SMS / Twilio) for one-time mobile verification and automated broadcast notices.
-2. **Phase 8**: Full Matrimonial matchmaking engine with private profile access, guardian contact requests, and verified biodatas.
-3. **Phase 9**: Job & Career Board with community scholarship distribution tracking.
-4. **Phase 10**: Progressive Web App (PWA) offline caching and push notifications.
+1. **Phase 1 to Phase 6**: Public Portal, Registration Engine, Member Dashboard, PDF Certificates, RBAC Admin Portal, Production Hardening. [COMPLETED]
+2. **Phase 7**: SMS Gateway Integration (Fast2SMS / Twilio) for one-time mobile verification and automated broadcast notices. [UPCOMING]
+3. **Phase 8**: Community Matrimonial System (3-Tier Privacy, Biodatas, Mutual Interests, Admin Contact Release). [COMPLETED]
+4. **Phase 9**: Job & Career Board with community scholarship distribution tracking. [FUTURE]
+5. **Phase 10**: Progressive Web App (PWA) offline caching and push notifications. [FUTURE]
 
 ---
 
@@ -133,5 +145,6 @@ Historically, community organizations faced significant organizational bottlenec
 ### Revision History
 | Version | Date | Author | Summary of Changes |
 | :--- | :--- | :--- | :--- |
-| **1.0.0** | 2026-09-20 | Antigravity AI | Initial formal PRD detailing all current features and future roadmap. |
+| **1.0.0** | 2026-09-20 | Antigravity AI | Initial formal PRD detailing platform features, RBAC architecture, and roadmap. |
+| **1.1.0** | 2026-09-20 | Antigravity AI | Added full Community Matrimonial System specifications, 3-tier privacy engine, and bilateral interest workflow. |
 
