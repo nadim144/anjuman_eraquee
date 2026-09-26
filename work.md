@@ -265,6 +265,96 @@ ALTER TABLE `user_registrtion` ADD COLUMN `cast` VARCHAR(100) NULL AFTER `marita
 
 ---
 
+## 2026-09-20
+
+### 🏛️ Comprehensive Architecture Documentation Suite (`Architecture/`)
+Established a complete 9-document engineering architecture suite based on modern AI-assisted software engineering and architecture frameworks:
+- **`Architecture/PRD.md`**: Product Requirements Document detailing platform vision, problem statement, user personas, complete feature inventory (Public Portal, Multi-Step Registration, PDF Certificates, RBAC, Matrimonial), KPIs, and 10-phase roadmap.
+- **`Architecture/ARCHITECTURE.md`**: System Architecture Document containing Mermaid system diagrams, full technology stack inventory, visual folder tree, sequence flows (Registration, RBAC Login, Certificate Minting, Matrimonial Proposals), and complete database schema dictionaries.
+- **`Architecture/DESIGN.md`**: UI/UX Design System detailing Islamic cultural design principles, color tokens (Forest Green, Emerald, Warm Gold, Slate, Light Gray), typography scales, form control standards, avatar styles, and responsive breakpoints.
+- **`Architecture/RULES.md`**: Core Engineering Guidelines & Standards (zero regressions, defensive SQL with `mysqli_real_escape_string` / `intval`, XSS prevention via `htmlspecialchars`, non-destructive auto-migrations, and Super Admin immutable safety rules).
+- **`Architecture/TASKS.md`**: Project Task Breakdown & Sprint Tracker covering 44 tracked tasks across 8 development phases with real-time status dashboards (89% complete).
+- **`Architecture/TEST_PLAN.md`**: Quality Assurance Plan with detailed test suites: `TC-AUTH`, `TC-REG`, `TC-CERT`, `TC-RBAC`, `TC-MATRI`, `TC-RESP`.
+- **`Architecture/SECURITY.md`**: Security Architecture, Threat Modeling, Session Management, Upload Hardening, and Bcrypt Cryptographic Standards.
+- **`Architecture/DECISIONS.md`**: 9 Architecture Decision Records (ADRs 001 through 009) capturing key architectural rationales.
+- **`Architecture/MEMORY.md`**: Project Context & Living Memory Reference for developers and AI agents.
+
+### 🛡️ Role-Based Access Control (RBAC) Admin Portal & Dynamic Login
+- **Removed Hardcoded Credentials**: Eliminated legacy hardcoded `Admin/Admin` credentials from `admin/login.php`.
+- **Dynamic Member-Credential Authentication**: Admins now authenticate using their registered community member credentials (Email or Phone + Password) against `admin_users` JOIN `user_registrtion`.
+- **Dedicated `admin_users` Table**: Added runtime auto-migration in `db.php` creating `admin_users` with unique foreign key `user_id`, `role` (`super_admin`, `admin`), `status` (`active`, `inactive`), and audit timestamps.
+- **Primary Super Admin Seeding & Safety Lock**: Initialized `ahmad.nadim144@gmail.com` (Member ID 3) as immutable primary Super Admin. Added code-level safety locks in `admin/admins.php` and `admin/auth.php` preventing demotion, deletion, or suspension.
+- **Dedicated Super Admin Console (`admin/admins.php`)**: Exclusive management portal for Super Admin to appoint registered members to Admin, activate/suspend accounts, and revoke administrative powers.
+- **Member Directory Integration (`admin/members.php`)**: Added direct `[ ⭐️ Make Admin ]` and `[ 🚫 Remove Admin ]` action buttons in table rows with dynamic role badges.
+- **RBAC Authentication Helpers (`admin/auth.php`)**: Implemented `is_super_admin()`, `is_admin()`, `require_super_admin()`, and `check_admin_auth()`.
+
+### 💍 Kalal Eraquee Community Matrimonial System
+- **Database Schema Auto-Migrations (`db.php`)**: Non-destructive, self-healing creation of 4 relational tables inside `codecxss_anjuman`:
+  1. `matrimonial_profiles`: Candidate attributes, family background, partner expectations, contact person details, relationship to managing member, and privacy flags.
+  2. `matrimonial_photos`: Photo gallery with primary photo flag.
+  3. `matrimonial_interests`: Bilateral proposal exchange system (`pending`, `accepted`, `declined`).
+  4. `matrimonial_access_requests`: Tier 3 guardian contact release requests awaiting Admin adjudication.
+  - Automatically verifies and provisions `uploads/matrimonial/` with `0755` permissions.
+- **Member-Gated Multi-Profile Intake Wizard (`matrimonial-create.php`)**:
+  - Gated to registered members; allows single user account to manage multiple candidates for `Self`, `Son`, `Daughter`, `Brother`, `Sister`, `Relative`.
+  - Comprehensive marital statuses: `Unmarried` (Never Married), `Divorced` (Talaq Shuda), `Khula Shuda`, and `Widowed` (Bewa).
+  - Real-time JavaScript DOB-to-Age calculation with server-side validation.
+  - Sequential candidate code generation (`ERQ-G-0001` for Grooms, `ERQ-B-0002` for Brides).
+  - Image upload with instant client-side preview and strict privacy mode toggle.
+- **Member Matrimonial Hub (`matrimonial-manage.php`)**:
+  - 4-tab interactive control center:
+    1. *My Candidate Profiles*: Manage active/married/paused statuses, view biodata card, edit biodata.
+    2. *Received Interests*: Real-time proposal notifications with one-click **Accept** or **Decline**.
+    3. *Sent Interests*: Live status tracking of sent proposals.
+    4. *Unlocked Contacts*: Directory of candidates whose guardian contacts have been approved by Admin.
+- **Privacy-First Search Directory (`matrimonial.php`)**:
+  - Interactive filter bar: Dulha / Dulhan, Marital Status, Caste subdivisions, and City/State.
+  - **Enforced 3-Tier Privacy Model**:
+    - *Tier 1 (Public / Unrelated)*: Candidate photo is strictly blurred/locked; name and direct contact are hidden.
+    - *Tier 2 (Reciprocal Candidate Match)*: Members with active candidate profiles of opposite gender unlock 1 clear photo, first name, and detailed biodata.
+    - *Tier 3 (Admin Approved)*: Direct guardian phone, WhatsApp, and full home address remain hidden until vetted and released by an Admin.
+  - Integrated "❤️ Show Interest" proposal modal.
+- **Candidate Biodata Dossier (`matrimonial-profile-view.php`)**:
+  - Displays personal, religious, education, profession, family background, and partner preferences.
+  - Privacy-aware contact box: Unlocked green box with direct contact info for Tier 3, status indicator for pending requests, or modal request trigger for unapproved users.
+- **Navigation Updates**:
+  - Added Matrimonial Spotlight banner, profile counters, and proposal alerts to Member Dashboard (`user-dashboard.php`).
+  - Added Matrimonial dropdown links (Dulha, Dulhan, Create Biodata) to public header (`index.html`).
+
+### ✏️ Candidate Profile Edit & Admin Approval Workflow
+- **Dedicated Edit Wizard (`matrimonial-edit.php`)**:
+  - Access-controlled to profile creator (`created_by_user_id == $_SESSION['user_id']`) or active Administrators.
+  - Pre-populates all existing biodata fields across Core Info, Education, Career, Family, Location, Guardian Contacts, and Partner Preferences.
+  - Allows replacing candidate photograph with instant preview, preserving existing image if unreplaced.
+  - When submitted by regular members: Updates record, sets `status = 'pending_approval'`, and records `updated_at = NOW()`.
+- **Public Directory Holdback**:
+  - Modified profiles are automatically excluded from public directory searches (`matrimonial.php`) while `status = 'pending_approval'`, ensuring unverified modifications or spam are held back.
+- **Member Awareness & Status Banners**:
+  - Displayed amber `⏳ Status: Under Admin Review (Pending Approval)` notice banner on `matrimonial-profile-view.php`.
+  - Added `⏳ Under Review` status pills and `[ ✏️ Edit Biodata ]` action buttons on `matrimonial-manage.php`.
+- **Inline Admin Adjudication Bar**:
+  - When an Admin or Super Admin views a pending profile on `matrimonial-profile-view.php?id=3`, an inline Admin Action Bar provides immediate 1-click `[ ✅ Approve & Publish ]` and `[ ❌ Reject / Pause ]` controls.
+- **Admin Moderation Console Upgrade (`admin/matrimonial.php`)**:
+  - Upgraded to 3 dedicated tabs:
+    1. *⏳ Profile Approvals (Count)*: Active by default when profiles await review. Shows candidate details, registered member info, last modified timestamp, view/edit buttons, and 1-click **Approve** and **Reject** actions.
+    2. *📩 Contact Access Requests*: Review family contact release requests.
+    3. *👥 All Candidate Profiles*: Full registry with status badges, view, edit, and delete options.
+  - Added 4-card statistics grid highlighting pending profile approvals in real time.
+
+### 🧪 Quality Assurance & Automated Verification
+- **Matrimonial Core Test (`scratch/test_matrimonial.php`)**:
+  - Verified creation of Groom (`ERQ-G-0001`) and Bride (`ERQ-B-0002`) profiles.
+  - Verified bilateral interest proposal exchange and acceptance (mutual interest established).
+  - Verified submission of contact access request and Admin approval.
+- **Matrimonial Edit & Approval Test (`scratch/test_matrimonial_edit.php`)**:
+  - Verified profile field modifications and status transition to `pending_approval`.
+  - Verified exclusion from public directory queries while pending.
+  - Verified appearance in Admin's approval queue.
+  - Verified 1-click Admin approval restores `active` status and immediately publishes to directory.
+- **PHP Syntax Linting**: All 12 PHP files passed `php -l` with 0 syntax errors.
+
+---
+
 ## 📋 Recent Updates & Pending / Next Steps
 
 - [x] Set up **MySQL database** for Registration/Membership feature (`codecxss_anjuman` / `user_registrtion` table created & verified).
@@ -293,5 +383,33 @@ ALTER TABLE `user_registrtion` ADD COLUMN `cast` VARCHAR(100) NULL AFTER `marita
   - Seeded primary Super Admin (`ahmad.nadim144@gmail.com`, Member ID 3).
   - Built dedicated Super Admin Console (`admin/admins.php`) with safety locks preventing deletion/demotion of primary Super Admin.
   - Added direct `[ ⭐️ Make Admin ]` and `[ 🚫 Remove Admin ]` actions inside Member Directory (`admin/members.php`).
+- [x] Establish Comprehensive **Architecture Documentation Suite** (`Architecture/`):
+  - Created 9 industry-standard architectural documents inspired by modern AI-assisted engineering frameworks:
+    - `PRD.md` — Product Requirements Document (Goals, Personas, Features, KPIs, Roadmap)
+    - `ARCHITECTURE.md` — System Architecture (Tech Stack, Folder Tree, Data Flows, DB Schemas)
+    - `DESIGN.md` — Design System (Tokens, Color Palette, Typography, Components, Responsive Breakpoints)
+    - `RULES.md` — Engineering Guidelines (Coding Standards, Defensive SQL, XSS Prevention, Git Rules)
+    - `TASKS.md` — Task Breakdown & Development Plan (42 Tracked Tasks across 8 Phases)
+    - `TEST_PLAN.md` — QA & Testing Strategy (Test Cases for Auth, Reg, Certs, RBAC, Matrimonial, Usability)
+    - `SECURITY.md` — Threat Modeling, RBAC Enforcement & Hardening Guide
+    - `DECISIONS.md` — Architecture Decision Records (ADRs 001 through 009)
+    - `MEMORY.md` — Living Context, Quick Reference & AI Assistant Guide
+- [x] Implement **Kalal Eraquee Community Matrimonial System**:
+  - Auto-created 4 normalized relational tables in `db.php`: `matrimonial_profiles`, `matrimonial_photos`, `matrimonial_interests`, `matrimonial_access_requests`.
+  - Built Candidate Profile Creation Wizard (`matrimonial-create.php`) supporting Self, Son, Daughter, Brother, Sister, Relative; marital statuses: Unmarried, Divorced (Talaq Shuda), Khula Shuda, and Widowed (Bewa).
+  - Implemented 3-Tier Privacy Architecture: Tier 1 (public/unrelated viewers get blurred/locked photos & basic bio), Tier 2 (reciprocal opposite-gender candidates unlock 1 photo & detailed bio), Tier 3 (Admin approval unlocks guardian phone, WhatsApp, and address).
+  - Built Bilateral Proposal Flow: Members can "Show Interest" from Candidate X to Candidate Y; receiving family can Accept or Decline in `matrimonial-manage.php`.
+  - Built Public Matrimonial Directory (`matrimonial.php`) with filters (Dulha/Dulhan, Marital Status, Caste, City) and candidate detail view (`matrimonial-profile-view.php`).
+  - Added Matrimonial Moderation Console (`admin/matrimonial.php`) for 1-click Contact Access Request approvals and profile oversight.
+  - Linked matrimonial navigation across Member Dashboard (`user-dashboard.php`), Public Header (`index.html`), and Admin Sidebars.
+- [x] Implement **Matrimonial Candidate Profile Edit & Admin Approval Workflow**:
+  - Built Candidate Profile Edit Wizard (`matrimonial-edit.php`) allowing profile owners (or Admins) to update biodata, correct errors, and replace photographs with instant preview.
+  - Enforced Moderation Lifecycle: When a member submits corrections, profile transitions to `status = 'pending_approval'`, holding it back from public directory searches until verified.
+  - Added "Under Admin Review" status alert and inline 1-click Admin adjudication controls on `matrimonial-profile-view.php`.
+  - Added `[ ✏️ Edit Biodata ]` action button and pending approval status badges in Member Matrimonial Hub (`matrimonial-manage.php`).
+  - Added dedicated **"⏳ Profile Approvals"** tab in `admin/matrimonial.php` with 1-click `[ ✅ Approve ]` and `[ ❌ Reject ]` actions.
+  - Verified with end-to-end integration test (`scratch/test_matrimonial_edit.php`).
 - [ ] Connect real SMS Gateway API (Fast2SMS / Twilio) using API Key for real-time mobile SMS delivery.
 - [ ] Upload updated files to **InfinityFree** hosting via FileZilla.
+
+

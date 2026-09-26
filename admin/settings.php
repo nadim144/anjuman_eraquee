@@ -72,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <li><a href="index.php">📊 Dashboard</a></li>
                 <li class="active"><a href="settings.php">⚙️ Site Settings & Phones</a></li>
                 <li><a href="members.php">👥 Registered Members</a></li>
+                <li><a href="matrimonial.php">💍 Matrimonial</a></li>
                 <?php if (is_super_admin()): ?>
                     <li><a href="admins.php">🛡️ Manage Admins</a></li>
                 <?php endif; ?>
