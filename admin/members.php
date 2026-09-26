@@ -16,13 +16,93 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $conn) {
     if ($action === 'delete_member') {
         $deleteId = intval($_POST['member_id'] ?? 0);
         if ($deleteId > 0) {
-            $delRes = mysqli_query($conn, "DELETE FROM user_registrtion WHERE id = $deleteId");
-            if ($delRes) {
-                $feedbackMsg = "Member #$deleteId has been permanently deleted.";
-                $feedbackType = 'success';
-            } else {
-                $feedbackMsg = "Error deleting member: " . mysqli_error($conn);
+            // Safety check: Cannot delete Super Admin
+            $checkAdm = mysqli_query($conn, "SELECT a.*, u.email FROM admin_users a JOIN user_registrtion u ON a.user_id = u.id WHERE a.user_id = $deleteId");
+            $admData = ($checkAdm && mysqli_num_rows($checkAdm) > 0) ? mysqli_fetch_assoc($checkAdm) : null;
+            if ($admData && ($admData['role'] === 'super_admin' || strtolower($admData['email']) === 'ahmad.nadim144@gmail.com' || $admData['id'] == 1)) {
+                $feedbackMsg = "Security Protection: Cannot delete the primary Super Administrator account!";
                 $feedbackType = 'danger';
+            } else {
+                if ($admData) {
+                    mysqli_query($conn, "DELETE FROM admin_users WHERE user_id = $deleteId");
+                }
+                $delRes = mysqli_query($conn, "DELETE FROM user_registrtion WHERE id = $deleteId");
+                if ($delRes) {
+                    $feedbackMsg = "Member #$deleteId has been permanently deleted.";
+                    $feedbackType = 'success';
+                } else {
+                    $feedbackMsg = "Error deleting member: " . mysqli_error($conn);
+                    $feedbackType = 'danger';
+                }
+            }
+        }
+    }
+
+    // PROMOTE MEMBER TO ADMIN (Super Admin only)
+    else if ($action === 'promote_to_admin') {
+        if (!is_super_admin()) {
+            $feedbackMsg = "Access Denied: Only Super Admin can promote members to Administrator.";
+            $feedbackType = 'danger';
+        } else {
+            $promoteUserId = intval($_POST['member_id'] ?? 0);
+            if ($promoteUserId > 0) {
+                // Verify member exists
+                $mRes = mysqli_query($conn, "SELECT id, username FROM user_registrtion WHERE id = $promoteUserId");
+                if ($mRes && $targetM = mysqli_fetch_assoc($mRes)) {
+                    $check = mysqli_query($conn, "SELECT id, status FROM admin_users WHERE user_id = $promoteUserId");
+                    if ($check && $exist = mysqli_fetch_assoc($check)) {
+                        if ($exist['status'] === 'inactive') {
+                            mysqli_query($conn, "UPDATE admin_users SET status = 'active' WHERE id = " . intval($exist['id']));
+                            $feedbackMsg = "Re-activated administrator access for <strong>" . htmlspecialchars($targetM['username']) . "</strong>.";
+                            $feedbackType = 'success';
+                        } else {
+                            $feedbackMsg = "<strong>" . htmlspecialchars($targetM['username']) . "</strong> is already an administrator.";
+                            $feedbackType = 'warning';
+                        }
+                    } else {
+                        $creatorId = intval($_SESSION['admin_id'] ?? 1);
+                        $ins = mysqli_query($conn, "INSERT INTO admin_users (user_id, role, status, created_by) VALUES ($promoteUserId, 'admin', 'active', $creatorId)");
+                        if ($ins) {
+                            $feedbackMsg = "Successfully promoted <strong>" . htmlspecialchars($targetM['username']) . "</strong> to Administrator! They can now log in using their member credentials.";
+                            $feedbackType = 'success';
+                        } else {
+                            $feedbackMsg = "Failed to promote member: " . mysqli_error($conn);
+                            $feedbackType = 'danger';
+                        }
+                    }
+                } else {
+                    $feedbackMsg = "Member record not found.";
+                    $feedbackType = 'danger';
+                }
+            }
+        }
+    }
+
+    // REVOKE ADMIN ACCESS (Super Admin only)
+    else if ($action === 'revoke_admin') {
+        if (!is_super_admin()) {
+            $feedbackMsg = "Access Denied: Only Super Admin can revoke administrator access.";
+            $feedbackType = 'danger';
+        } else {
+            $revokeAdminId = intval($_POST['admin_id'] ?? 0);
+            $check = mysqli_query($conn, "SELECT a.id, a.role, u.username, u.email FROM admin_users a JOIN user_registrtion u ON a.user_id = u.id WHERE a.id = $revokeAdminId");
+            $targetAdm = ($check && mysqli_num_rows($check) > 0) ? mysqli_fetch_assoc($check) : null;
+
+            if (!$targetAdm) {
+                $feedbackMsg = "Administrator record not found.";
+                $feedbackType = 'danger';
+            } elseif ($targetAdm['role'] === 'super_admin' || strtolower($targetAdm['email']) === 'ahmad.nadim144@gmail.com' || $targetAdm['id'] == 1) {
+                $feedbackMsg = "Security Protection: The primary Super Admin account cannot be revoked or demoted.";
+                $feedbackType = 'danger';
+            } else {
+                $del = mysqli_query($conn, "DELETE FROM admin_users WHERE id = $revokeAdminId");
+                if ($del) {
+                    $feedbackMsg = "Administrator privileges have been revoked for <strong>" . htmlspecialchars($targetAdm['username']) . "</strong>. Their registered member account remains active.";
+                    $feedbackType = 'success';
+                } else {
+                    $feedbackMsg = "Failed to revoke admin privileges: " . mysqli_error($conn);
+                    $feedbackType = 'danger';
+                }
             }
         }
     }
@@ -112,7 +192,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv' && $conn) {
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename=anjuman_members_' . date('Y-m-d') . '.csv');
     $output = fopen('php://output', 'w');
-    fputcsv($output, ['ID', 'Name', 'Father Name', 'Mother Name', 'DOB', 'Age', 'Native Place', 'Gender', 'Marital Status', 'Email', 'Phone', 'WhatsApp', 'District', 'State', 'Qualification', 'Occupation', 'Registered Date']);
+    fputcsv($output, ['ID', 'Name', 'Father Name', 'Mother Name', 'DOB', 'Age', 'Gender', 'Marital Status', 'Cast', 'Aadhaar Number', 'Native Place', 'Email', 'Phone', 'Additional Mobile', 'WhatsApp', 'District', 'State', 'Qualification', 'Occupation', 'Registered Date']);
     
     $res = mysqli_query($conn, "SELECT * FROM user_registrtion ORDER BY id DESC");
     if ($res) {
@@ -124,11 +204,14 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv' && $conn) {
                 $row['mothername'] ?? '',
                 $row['dob'] ?? '',
                 $row['age'] ?? '',
-                $row['nativeplace'] ?? '',
                 $row['gender'] ?? '',
                 $row['maritalstatus'] ?? '',
+                $row['cast'] ?? '',
+                $row['aadhaar_number'] ?? '',
+                $row['nativeplace'] ?? '',
                 $row['email'] ?? '',
                 $row['phonenumber'] ?? '',
+                $row['additional_mobile'] ?? '',
                 $row['whatsappnumber'] ?? '',
                 $row['presentdistrict'] ?? '',
                 $row['presentstate'] ?? '',
@@ -158,14 +241,18 @@ if ($conn) {
     $where = [];
     if (!empty($search)) {
         $escaped = mysqli_real_escape_string($conn, $search);
-        $where[] = "(username LIKE '%$escaped%' OR email LIKE '%$escaped%' OR phonenumber LIKE '%$escaped%' OR presentdistrict LIKE '%$escaped%' OR nativeplace LIKE '%$escaped%')";
+        $where[] = "(u.username LIKE '%$escaped%' OR u.email LIKE '%$escaped%' OR u.phonenumber LIKE '%$escaped%' OR u.presentdistrict LIKE '%$escaped%' OR u.nativeplace LIKE '%$escaped%')";
     }
     if ($filterReset) {
-        $where[] = "reset_requested = 1";
+        $where[] = "u.reset_requested = 1";
     }
 
     $whereClause = !empty($where) ? "WHERE " . implode(' AND ', $where) : "";
-    $sql = "SELECT * FROM user_registrtion $whereClause ORDER BY id DESC";
+    $sql = "SELECT u.*, a.id AS admin_id, a.role AS admin_role, a.status AS admin_status 
+            FROM user_registrtion u 
+            LEFT JOIN admin_users a ON u.id = a.user_id 
+            $whereClause 
+            ORDER BY u.id DESC";
     $res = mysqli_query($conn, $sql);
     if ($res) {
         while ($row = mysqli_fetch_assoc($res)) {
@@ -314,6 +401,10 @@ if ($conn) {
                 <li><a href="index.php">📊 Dashboard</a></li>
                 <li><a href="settings.php">⚙️ Site Settings & Phones</a></li>
                 <li class="active"><a href="members.php">👥 Registered Members</a></li>
+                <li><a href="matrimonial.php">💍 Matrimonial</a></li>
+                <?php if (is_super_admin()): ?>
+                    <li><a href="admins.php">🛡️ Manage Admins</a></li>
+                <?php endif; ?>
                 <li><a href="../index.html" target="_blank">🌐 View Live Website</a></li>
             </ul>
             <div class="admin-nav-footer">
@@ -326,7 +417,7 @@ if ($conn) {
             <header class="admin-topbar">
                 <h1>Registered Members Directory</h1>
                 <div class="admin-user-info">
-                    <span class="badge-user">Super Admin</span>
+                    <span class="badge-user"><?php echo is_super_admin() ? '👑 Super Admin' : '🛡️ Admin'; ?>: <?php echo htmlspecialchars($_SESSION['admin_name'] ?? 'Admin'); ?></span>
                     <a href="logout.php" style="color: #ef4444; text-decoration: none; font-size: 14px; font-weight: 600;">Logout</a>
                 </div>
             </header>
@@ -423,9 +514,21 @@ if ($conn) {
                                                     <?php else: ?>
                                                         <span class="badge-pill badge-success">Active</span>
                                                     <?php endif; ?>
+
+                                                    <?php if (!empty($m['admin_id'])): ?>
+                                                        <div style="margin-top: 5px;">
+                                                            <?php if ($m['admin_role'] === 'super_admin'): ?>
+                                                                <span class="badge-pill" style="background:#fef3c7; color:#92400e; border:1px solid #fde68a;">👑 Super Admin</span>
+                                                            <?php else: ?>
+                                                                <span class="badge-pill" style="background:<?php echo $m['admin_status'] === 'active' ? '#e0f2fe' : '#fee2e2'; ?>; color:<?php echo $m['admin_status'] === 'active' ? '#0369a1' : '#b91c1c'; ?>; border:1px solid <?php echo $m['admin_status'] === 'active' ? '#bae6fd' : '#fca5a5'; ?>;">
+                                                                    🛡️ Admin (<?php echo ucfirst($m['admin_status']); ?>)
+                                                                </span>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    <?php endif; ?>
                                                 </td>
                                                 <td>
-                                                    <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                                                    <div style="display: flex; gap: 4px; flex-wrap: wrap; align-items: center;">
                                                         <button type="button" class="btn-action btn-action-view" onclick='viewMember(<?php echo json_encode($m, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>)'>
                                                             👁️ Details
                                                         </button>
@@ -435,13 +538,40 @@ if ($conn) {
                                                         <button type="button" class="btn-action btn-action-key" onclick='openTempPwdModal(<?php echo $m['id']; ?>, "<?php echo htmlspecialchars(addslashes($m['username'] ?? '')); ?>")'>
                                                             🔑 Temp Pwd
                                                         </button>
-                                                        <form method="POST" action="members.php" style="display:inline;" onsubmit="return confirm('Are you sure you want to permanently delete member #<?php echo $m['id']; ?> (<?php echo htmlspecialchars(addslashes($m['username'] ?? '')); ?>)? This action cannot be undone.');">
-                                                            <input type="hidden" name="action" value="delete_member">
-                                                            <input type="hidden" name="member_id" value="<?php echo $m['id']; ?>">
-                                                            <button type="submit" class="btn-action btn-action-delete">
-                                                                🗑️ Delete
-                                                            </button>
-                                                        </form>
+
+                                                        <?php if (is_super_admin()): ?>
+                                                            <?php if (!empty($m['admin_id']) && $m['admin_role'] === 'super_admin'): ?>
+                                                                <span class="btn-action" style="background:#f8fafc; color:#94a3b8; border:1px solid #e2e8f0; cursor:default;" title="Primary Super Administrator cannot be changed">
+                                                                    🔒 Super Admin
+                                                                </span>
+                                                            <?php elseif (!empty($m['admin_id'])): ?>
+                                                                <form method="POST" action="members.php" style="display:inline;" onsubmit="return confirm('Revoke Administrator privileges for <?php echo htmlspecialchars(addslashes($m['username'] ?? '')); ?>?');">
+                                                                    <input type="hidden" name="action" value="revoke_admin">
+                                                                    <input type="hidden" name="admin_id" value="<?php echo $m['admin_id']; ?>">
+                                                                    <button type="submit" class="btn-action" style="background:#fee2e2; color:#dc2626;" title="Revoke Admin Privileges">
+                                                                        🚫 Remove Admin
+                                                                    </button>
+                                                                </form>
+                                                            <?php else: ?>
+                                                                <form method="POST" action="members.php" style="display:inline;" onsubmit="return confirm('Promote <?php echo htmlspecialchars(addslashes($m['username'] ?? '')); ?> to Administrator? They will be able to log in to the admin panel with their current member credentials.');">
+                                                                    <input type="hidden" name="action" value="promote_to_admin">
+                                                                    <input type="hidden" name="member_id" value="<?php echo $m['id']; ?>">
+                                                                    <button type="submit" class="btn-action" style="background:#ede9fe; color:#6d28d9;" title="Promote to Administrator">
+                                                                        ⭐️ Make Admin
+                                                                    </button>
+                                                                </form>
+                                                            <?php endif; ?>
+                                                        <?php endif; ?>
+
+                                                        <?php if (empty($m['admin_id']) || $m['admin_role'] !== 'super_admin'): ?>
+                                                            <form method="POST" action="members.php" style="display:inline;" onsubmit="return confirm('Are you sure you want to permanently delete member #<?php echo $m['id']; ?> (<?php echo htmlspecialchars(addslashes($m['username'] ?? '')); ?>)? This action cannot be undone.');">
+                                                                <input type="hidden" name="action" value="delete_member">
+                                                                <input type="hidden" name="member_id" value="<?php echo $m['id']; ?>">
+                                                                <button type="submit" class="btn-action btn-action-delete">
+                                                                    🗑️ Delete
+                                                                </button>
+                                                            </form>
+                                                        <?php endif; ?>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -605,7 +735,10 @@ function viewMember(m) {
         ['Age', (m.age ? m.age + ' yrs' : '-')],
         ['Gender', m.gender || '-'],
         ['Marital Status', m.maritalstatus || '-'],
+        ['Cast', m.cast || '-'],
+        ['Aadhaar Number', m.aadhaar_number || '-'],
         ['Phone Number', m.phonenumber || '-'],
+        ['Additional Mobile', m.additional_mobile || '-'],
         ['WhatsApp Number', m.whatsappnumber || '-'],
         ['Email Address', m.email || '-'],
         ['Native Place', m.nativeplace || '-'],
